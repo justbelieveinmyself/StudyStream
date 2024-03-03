@@ -1,7 +1,7 @@
-package exceptions.adviser;
+package com.justbelieveinmyself.authservice.exceptions.adviser;
 
 import com.justbelieveinmyself.library.exception.ResponseError;
-import exceptions.UsernameOrEmailAlreadyExistsException;
+import com.justbelieveinmyself.authservice.exceptions.UsernameOrEmailAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

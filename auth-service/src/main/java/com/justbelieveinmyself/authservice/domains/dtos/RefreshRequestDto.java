@@ -1,16 +1,16 @@
 package com.justbelieveinmyself.authservice.domains.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-public class LoginResponseDto {
-    public String accessToken;
-    public Instant accessTokenExpiration;
+@Getter
+public class RefreshRequestDto {
+    @NotBlank(message = "Please, enter your refreshToken!")
+    private String refreshToken;
 }

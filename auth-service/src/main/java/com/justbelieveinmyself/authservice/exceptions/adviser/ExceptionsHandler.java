@@ -12,8 +12,8 @@ import java.time.Instant;
 @RestControllerAdvice
 public class ExceptionsHandler {
     @ExceptionHandler(value = UsernameOrEmailAlreadyExistsException.class)
-    public ResponseEntity handleUsernameOrEmailAlreadyExistsException(UsernameOrEmailAlreadyExistsException e) {
+    public ResponseEntity<ResponseError> handleUsernameOrEmailAlreadyExistsException(UsernameOrEmailAlreadyExistsException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 409);
-        return new ResponseEntity(responseError, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(responseError, HttpStatus.CONFLICT);
     }
 }

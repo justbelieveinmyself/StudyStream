@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterDto {
-    @NotBlank(message = "")
+    @NotBlank(message = "Please, enter your username!")
     private String username;
-    @NotBlank(message = "")
+    @NotBlank(message = "Please, enter your password!")
     private String password;
-    @Email(message = "")
+    @Email(message = "Please, enter your email!")
     private String email;
 }

@@ -10,8 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter @Setter
 public class LoginRequestDto {
-    @NotBlank(message = "")
+    @NotBlank(message = "Please, enter your username!")
     private String username;
-    @NotBlank(message = "")
+    @NotBlank(message = "Please, enter your username!")
     private String password;
 }

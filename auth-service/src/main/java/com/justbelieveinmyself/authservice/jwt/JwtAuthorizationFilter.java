@@ -23,7 +23,7 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private static final String TOKEN_PREFIX ="Bearer ";
     private final UserDetailsService userDetailsService;
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String secret;
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
         super(authenticationManager);
@@ -42,14 +42,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     public UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         try {
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (token != null || !token.startsWith(TOKEN_PREFIX)) {
+            if (token == null || !token.startsWith(TOKEN_PREFIX)) {
                 return null;
             }
             String username = JWT.require(Algorithm.HMAC256(secret))
                     .build()
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
-            if (username != null) return null;
+            if (username == null) return null;
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
         } catch (TokenExpiredException | JWTDecodeException ex) {

@@ -13,7 +13,6 @@ import java.util.Set;
 @Setter
 public class UserDto implements Dto<User> {
     private String username;
-    private String password;
     private String email;
     private Set<Role> roles;
     @Override

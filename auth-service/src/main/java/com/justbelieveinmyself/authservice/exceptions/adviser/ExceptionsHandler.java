@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.authservice.exceptions.adviser;
 
+import com.justbelieveinmyself.authservice.exceptions.RefreshTokenException;
 import com.justbelieveinmyself.library.exception.ResponseError;
 import com.justbelieveinmyself.authservice.exceptions.UsernameOrEmailAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -16,4 +17,11 @@ public class ExceptionsHandler {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 409);
         return new ResponseEntity<>(responseError, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(value = RefreshTokenException.class)
+    public ResponseEntity<ResponseError> handleRefreshTokenException(RefreshTokenException e) {
+        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 403);
+        return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
+    }
+
 }

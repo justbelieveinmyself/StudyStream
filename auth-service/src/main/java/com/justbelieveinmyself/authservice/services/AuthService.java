@@ -6,8 +6,7 @@ import com.justbelieveinmyself.authservice.domains.enums.Role;
 import com.justbelieveinmyself.authservice.exceptions.UsernameOrEmailAlreadyExistsException;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.NotImplementedException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +21,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public UserDto register(RegisterDto registerDto) {
         if (userRepository.existsByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail())) {
@@ -32,6 +32,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
         user.setRoles(Set.of(Role.USER));
+        kafkaTemplate.send("user-registration-topic", registerDto.getUsername());
         User savedUser = userRepository.save(user);
         return new UserDto().fromEntity(savedUser);
     }

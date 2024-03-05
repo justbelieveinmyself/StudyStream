@@ -2,9 +2,9 @@ package com.justbelieveinmyself.library.exception;
 
 import java.time.Instant;
 public class ResponseError {
+    private Integer statusCode;
     private String message;
     private Instant timestamp;
-    private Integer statusCode;
 
     public ResponseError(String message, Instant timestamp, Integer statusCode) {
         this.message = message;

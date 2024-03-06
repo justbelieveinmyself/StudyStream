@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.authservice.exceptions;
+package com.justbelieveinmyself.library.exception;
 
 public class InvalidRequestException extends RuntimeException {
     public InvalidRequestException(String message) {

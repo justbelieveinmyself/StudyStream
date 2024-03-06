@@ -1,7 +1,7 @@
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
-import com.justbelieveinmyself.authservice.exceptions.InvalidRequestException;
+import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

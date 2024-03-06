@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.authservice.exceptions;
+package com.justbelieveinmyself.library.exception;
 
 public class UsernameOrEmailAlreadyExistsException extends RuntimeException {
     public UsernameOrEmailAlreadyExistsException(String message) {

@@ -1,14 +1,18 @@
-package com.justbelieveinmyself.authservice.domains.dtos;
+package com.justbelieveinmyself.userservice.domains.dtos;
 
-import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.dto.Dto;
+import com.justbelieveinmyself.library.enums.Role;
+import com.justbelieveinmyself.userservice.domains.entities.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Set;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class UserDto implements Dto<User> {
@@ -16,6 +20,7 @@ public class UserDto implements Dto<User> {
     private String username;
     private String email;
     private Set<Role> roles;
+
     @Override
     public UserDto fromEntity(User user) {
         UserDto userDto = new UserDto();

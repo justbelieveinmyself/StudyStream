@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.authservice.domains.entities;
 
-import com.justbelieveinmyself.authservice.domains.enums.Role;
+import com.justbelieveinmyself.library.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

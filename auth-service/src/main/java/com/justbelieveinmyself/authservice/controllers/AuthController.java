@@ -24,20 +24,20 @@ public class AuthController {
     public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterDto registerDto, BindingResult result) {
         validateErrors(result);
         UserDto userDto = authService.register(registerDto);
-        return new ResponseEntity(userDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
     @PostMapping("/login")
     public ResponseEntity<RefreshResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult result) {
         validateErrors(result);
         RefreshResponseDto responseDto = authService.login(loginRequestDto);
-        return new ResponseEntity(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<RefreshResponseDto> refresh(@RequestBody @Valid RefreshRequestDto refreshRequestDto, BindingResult result) {
         validateErrors(result);
         RefreshResponseDto responseDto = authService.refreshToken(refreshRequestDto);
-        return new ResponseEntity(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     private void validateErrors(BindingResult result) {

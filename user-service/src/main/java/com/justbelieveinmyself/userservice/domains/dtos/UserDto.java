@@ -3,6 +3,8 @@ package com.justbelieveinmyself.userservice.domains.dtos;
 import com.justbelieveinmyself.library.dto.Dto;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.userservice.domains.entities.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 
@@ -17,6 +19,8 @@ public class UserDto implements Dto<User> {
     private String email;
     private Set<Role> roles;
     private String firstName;
+    private String lastName;
+    private String phone;
 
     @Override
     public UserDto fromEntity(User user) {

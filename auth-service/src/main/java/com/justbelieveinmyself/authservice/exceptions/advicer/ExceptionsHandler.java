@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.authservice.exceptions.adviser;
+package com.justbelieveinmyself.authservice.exceptions.advicer;
 
 import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.exceptions.RefreshTokenException;

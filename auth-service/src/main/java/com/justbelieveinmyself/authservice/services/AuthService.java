@@ -39,7 +39,7 @@ public class AuthService {
             user.setUsername(registerDto.getUsername());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
             user.setEmail(registerDto.getEmail());
-            user.setRoles(Set.of(Role.USER));
+            user.setRoles(Set.of(Role.STUDENT));
             UserDto userDto = new UserDto().fromEntity(user);
             ProducerRecord<String, UserDto> record = new ProducerRecord<String, UserDto>("user-registration-topic", userDto);
             record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, "user-registration-reply-topic".getBytes()));

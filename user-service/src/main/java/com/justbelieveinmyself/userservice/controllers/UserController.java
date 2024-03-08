@@ -7,7 +7,6 @@ import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

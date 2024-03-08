@@ -3,7 +3,6 @@ package com.justbelieveinmyself.apigateway.exceptions.advicer;
 import com.justbelieveinmyself.apigateway.exceptions.NotAuthorizedException;
 import com.justbelieveinmyself.library.exception.ResponseError;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

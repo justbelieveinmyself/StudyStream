@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.authservice.domains.entities;
 
-import com.justbelieveinmyself.authservice.domains.enums.Role;
+import com.justbelieveinmyself.library.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; // email
     @Enumerated(EnumType.STRING) @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles;

@@ -1,18 +1,18 @@
-package com.justbelieveinmyself.authservice.domains.dtos;
+package com.justbelieveinmyself.userservice.domains.dtos;
 
-import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.dto.Dto;
+import com.justbelieveinmyself.library.enums.Role;
+import com.justbelieveinmyself.userservice.domains.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Set;
 
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class UserDto implements Dto<User> {
     private Long id;
     private String username;
@@ -21,6 +21,7 @@ public class UserDto implements Dto<User> {
     private String firstName;
     private String lastName;
     private String phone;
+
     @Override
     public UserDto fromEntity(User user) {
         UserDto userDto = new UserDto();

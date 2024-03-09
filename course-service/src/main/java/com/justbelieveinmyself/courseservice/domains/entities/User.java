@@ -21,6 +21,6 @@ public class User {
     private Long id;
     @OneToMany(mappedBy = "author")
     private Set<Course> createdCourses;
-    @ManyToMany(mappedBy = "subscribers")
-    private Set<Course> subscribedCourses;
+    @OneToOne(mappedBy = "user")
+    private Enrollment enrollment;
 }

@@ -1,5 +1,7 @@
 package com.justbelieveinmyself.courseservice.domains.entities;
 
+import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
+import com.justbelieveinmyself.courseservice.domains.enums.CourseStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,11 +29,19 @@ public class Course {
     private String description;
     @CreationTimestamp
     private ZonedDateTime creationTime;
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "customer_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false, name = "author_id")
     private User author;
-    @ManyToMany
-    @JoinTable(name = "course_author", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<User> subscribers;
-    // modules?
+    private String category;
+    @Enumerated(EnumType.STRING)
+    private CourseDifficulty difficulty;
+    private Integer duration;
+    private BigDecimal price;
+    private Double rating;
+    @Enumerated(EnumType.STRING)
+    private CourseStatus status;
+    @OneToMany(mappedBy = "course", orphanRemoval = true)
+    private List<Module> modules;
+    @OneToOne(mappedBy = "course")
+    private Enrollment enrollment;
 }

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -30,6 +31,7 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final ReplyingKafkaTemplate<String, UserDto, String> kafkaTemplate;
 
+    @Transactional
     public UserDto register(RegisterDto registerDto) {
         if (userRepository.existsByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail())) {
             throw new UsernameOrEmailAlreadyExistsException("User with username or email already exists!");
@@ -40,20 +42,26 @@ public class AuthService {
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
             user.setEmail(registerDto.getEmail());
             user.setRoles(Set.of(Role.STUDENT));
-            UserDto userDto = new UserDto().fromEntity(user);
+
+            User savedUser = userRepository.save(user);
+
+            UserDto userDto = new UserDto().fromEntity(savedUser);
+            userDto.setFirstName(registerDto.getUsername());
+            userDto.setLastName(registerDto.getLastName());
+            userDto.setPhone(registerDto.getPhone());
+
             ProducerRecord<String, UserDto> record = new ProducerRecord<String, UserDto>("user-registration-topic", userDto);
             record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, "user-registration-reply-topic".getBytes()));
             RequestReplyFuture<String, UserDto, String> future = kafkaTemplate.sendAndReceive(record);
             SendResult<String, UserDto> sendResult = future.getSendFuture().get();
             sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ": " + header.value().toString()));
             ConsumerRecord<String, String> consumerRecord = future.get();
-            if (consumerRecord.value().equals("Ok")) {
-                User savedUser = userRepository.save(user);
-                return new UserDto().fromEntity(savedUser);
+            if (!consumerRecord.value().equals("Ok")) {
+                throw new UsernameOrEmailAlreadyExistsException("Cannot create user!: " + consumerRecord.value());
             }
-            throw new UsernameOrEmailAlreadyExistsException("Cannot create user!: " + consumerRecord.value());
+            return userDto;
         } catch (InterruptedException | ExecutionException e) {
-            throw new UsernameOrEmailAlreadyExistsException("Error sending data");
+            throw new UsernameOrEmailAlreadyExistsException("Error sending data: " + e.getMessage());
         }
     }
 

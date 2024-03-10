@@ -23,9 +23,6 @@ public class UserService {
 
     public String createNewUser(UserDto userDto) {
         User user = userDto.toEntity();
-        if (userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
-            return "Bad";
-        }
         userRepository.save(user);
         return "Ok";
     }

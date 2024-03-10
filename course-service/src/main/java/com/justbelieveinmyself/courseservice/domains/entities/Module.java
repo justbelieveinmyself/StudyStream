@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "modules")
@@ -27,5 +28,6 @@ public class Module {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "course_id")
     private Course course;
-    //list of lessons? test/practice
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    private List<Lesson> lessons;
 }

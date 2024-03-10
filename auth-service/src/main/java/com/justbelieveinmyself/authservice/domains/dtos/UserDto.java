@@ -21,6 +21,7 @@ public class UserDto implements Dto<User> {
     private String firstName;
     private String lastName;
     private String phone;
+
     @Override
     public UserDto fromEntity(User user) {
         UserDto userDto = new UserDto();

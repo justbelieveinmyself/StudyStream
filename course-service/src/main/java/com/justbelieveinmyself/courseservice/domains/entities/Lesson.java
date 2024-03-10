@@ -10,7 +10,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.ZonedDateTime;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "lessons")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "lesson_type", discriminatorType = DiscriminatorType.STRING)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,6 +24,12 @@ public abstract class Lesson {
     private Long id;
     private String title;
     private String description;
+    @Column(nullable = false)
+    private Integer order;
     @CreationTimestamp
     private ZonedDateTime creationTime;
+    private ZonedDateTime deadLine;
+    @ManyToOne
+    @JoinColumn(name = "module_id")
+    private Module module;
 }

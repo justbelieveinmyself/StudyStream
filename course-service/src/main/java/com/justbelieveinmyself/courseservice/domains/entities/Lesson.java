@@ -24,7 +24,7 @@ public abstract class Lesson {
     private Long id;
     private String title;
     private String description;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "lesson_order")
     private Integer order;
     @CreationTimestamp
     private ZonedDateTime creationTime;

@@ -26,4 +26,7 @@ public class TestQuestion {
     private List<String> options;
     @Column(nullable = false)
     private Integer correctOptionIndex;
+    @ManyToOne
+    @JoinColumn(name = "lesson_id", nullable = false)
+    private Lesson lesson;
 }

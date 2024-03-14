@@ -21,10 +21,8 @@ public class UserService {
         return ResponseEntity.ok(new UserDto().fromEntity(user));
     }
 
-    public String createNewUser(UserDto userDto) {
-        User user = userDto.toEntity();
+    public void createNewUser(User user) {
         userRepository.save(user);
-        return "Ok";
     }
 
     public ResponseEntity<UserDto> updateUserById(Long userId, UpdateUserDto dto) {

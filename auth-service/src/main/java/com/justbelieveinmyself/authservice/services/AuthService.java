@@ -2,6 +2,7 @@ package com.justbelieveinmyself.authservice.services;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
 import com.justbelieveinmyself.authservice.domains.entities.User;
+import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.exception.UsernameOrEmailAlreadyExistsException;
@@ -56,5 +57,19 @@ public class AuthService {
 
     public RefreshResponseDto refreshToken(RefreshRequestDto refreshRequestDto) {
         return refreshTokenService.refreshToken(refreshRequestDto);
+    }
+
+    @Transactional
+    public void updateEmail(User authedUser, UpdateEmailDto requestDto) {
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
+            throw new UsernameOrEmailAlreadyExistsException("User with email already exists!");
+        }
+        authedUser.setEmail(requestDto.getEmail());
+        userRepository.save(authedUser);
+        // TODO: send this change to user-email topic and invoke email service to send verification
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UnauthorizedException("Bearer token not found!"));
     }
 }

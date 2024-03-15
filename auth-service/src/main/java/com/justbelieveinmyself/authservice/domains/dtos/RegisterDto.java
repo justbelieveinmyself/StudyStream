@@ -16,6 +16,7 @@ public class RegisterDto {
     @NotBlank(message = "Please, enter your password!")
     private String password;
     @Email(message = "Invalid email!")
+    @NotBlank(message = "Please, enter your email!")
     private String email;
     private String firstName;
     private String lastName;

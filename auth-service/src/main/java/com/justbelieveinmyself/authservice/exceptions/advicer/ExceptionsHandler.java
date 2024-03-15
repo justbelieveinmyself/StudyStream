@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.authservice.exceptions.advicer;
 
+import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.exceptions.RefreshTokenException;
 import com.justbelieveinmyself.library.exception.ResponseError;
@@ -13,6 +14,7 @@ import java.time.Instant;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
+
     @ExceptionHandler(value = UsernameOrEmailAlreadyExistsException.class)
     public ResponseEntity<ResponseError> handleUsernameOrEmailAlreadyExistsException(UsernameOrEmailAlreadyExistsException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 409);
@@ -29,6 +31,12 @@ public class ExceptionsHandler {
     public ResponseEntity<ResponseError> handleInvalidRequestException(InvalidRequestException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 403);
         return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity<ResponseError> handleUnauthorizedException(UnauthorizedException e) {
+        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 402);
+        return new ResponseEntity<>(responseError, HttpStatus.UNAUTHORIZED);
     }
 
 }

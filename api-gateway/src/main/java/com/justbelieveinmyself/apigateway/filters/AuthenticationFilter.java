@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.justbelieveinmyself.apigateway.configs.RouterValidator;
-import com.justbelieveinmyself.apigateway.exceptions.NotAuthorizedException;
+import com.justbelieveinmyself.apigateway.exceptions.UnauthorizedException;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -35,7 +35,7 @@ public class AuthenticationFilter implements GatewayFilter {
         if (validator.isSecured.test(request)) {
 
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                throw new NotAuthorizedException("Authorization header is empty!");
+                throw new UnauthorizedException("Authorization header is empty!");
             }
             try {
                 final String bearerToken = request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0);
@@ -50,9 +50,9 @@ public class AuthenticationFilter implements GatewayFilter {
 
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
             } catch (TokenExpiredException e) {
-                throw new NotAuthorizedException("Token expired");
+                throw new UnauthorizedException("Token expired");
             } catch (JWTDecodeException e) {
-                throw new NotAuthorizedException("Token invalid format");
+                throw new UnauthorizedException("Token invalid format");
             }
 
         }

@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.apigateway.exceptions.advicer;
 
-import com.justbelieveinmyself.apigateway.exceptions.NotAuthorizedException;
+import com.justbelieveinmyself.apigateway.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.library.exception.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +12,10 @@ import java.time.Instant;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
-    @ExceptionHandler({NotAuthorizedException.class})
-    public ResponseEntity<ResponseError> handleNotAuthorizedException(NotAuthorizedException ex) {
-        ResponseError response = new ResponseError(ex.getMessage(), Instant.now(), 403);
-        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity<ResponseError> handleUnauthorizedException(UnauthorizedException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage(), Instant.now(), 403);
+        return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
     }
+
 }

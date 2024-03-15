@@ -1,18 +1,17 @@
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
+import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,6 +25,7 @@ public class AuthController {
         UserDto userDto = authService.register(registerDto);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
+
     @PostMapping("/login")
     public ResponseEntity<RefreshResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto, BindingResult result) {
         validateErrors(result);
@@ -38,6 +38,18 @@ public class AuthController {
         validateErrors(result);
         RefreshResponseDto responseDto = authService.refreshToken(refreshRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/email")
+    public ResponseEntity<String> updateEmail(
+            @RequestBody @Valid UpdateEmailDto requestDto,
+            BindingResult result,
+            @RequestHeader("X-Username") String username
+    ) {
+        User authedUser = authService.findByUsername(username);
+        validateErrors(result);
+        authService.updateEmail(authedUser, requestDto);
+        return ResponseEntity.ok(requestDto.getEmail());
     }
 
     private void validateErrors(BindingResult result) {

@@ -5,6 +5,8 @@ import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.services.AuthService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,14 @@ public class AuthController {
         validateErrors(result);
         authService.updateEmail(authedUser, requestDto);
         return ResponseEntity.ok(requestDto.getEmail());
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<String> verifyEmail(
+            @RequestParam("code") @NotBlank String activationCode
+    ) {
+        authService.verifyEmail(activationCode);
+        return ResponseEntity.noContent().build();
     }
 
     private void validateErrors(BindingResult result) {

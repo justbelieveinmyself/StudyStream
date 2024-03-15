@@ -2,6 +2,7 @@ package com.justbelieveinmyself.authservice.services;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
 import com.justbelieveinmyself.authservice.domains.entities.User;
+import com.justbelieveinmyself.authservice.exceptions.EmailVerificationException;
 import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.library.enums.Role;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
-    private final KafkaTemplate<String, UserDto> kafkaTemplate;
+    private final KafkaTemplate<String, UserDto> userDtoKafkaTemplate;
+    private final KafkaTemplate<String, EmailVerificationDto> stringKafkaTemplate;
 
     @Transactional
     public UserDto register(RegisterDto registerDto) {
@@ -35,6 +38,8 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
         user.setRoles(Set.of(Role.STUDENT));
+        String activationCode = UUID.randomUUID().toString();
+        user.setActivationCode(activationCode);
 
         User savedUser = userRepository.save(user);
 
@@ -42,7 +47,10 @@ public class AuthService {
         userDto.setFirstName(registerDto.getUsername());
         userDto.setLastName(registerDto.getLastName());
         userDto.setPhone(registerDto.getPhone());
-        kafkaTemplate.send("user-registration-topic", userDto);
+        userDtoKafkaTemplate.send("user-registration-topic", userDto);
+
+        EmailVerificationDto emailVerificationDto = new EmailVerificationDto(userDto.getUsername(), userDto.getEmail(), activationCode);
+        stringKafkaTemplate.send("user-email-verify-topic", emailVerificationDto);
 
         return userDto;
     }
@@ -71,5 +79,11 @@ public class AuthService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UnauthorizedException("Bearer token not found!"));
+    }
+
+    public void verifyEmail(String activationCode) {
+        User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EmailVerificationException("Activation code already used!"));
+        user.setActivationCode(null);
+        userRepository.save(user);
     }
 }

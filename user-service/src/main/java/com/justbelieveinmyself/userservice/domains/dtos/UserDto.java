@@ -3,9 +3,9 @@ package com.justbelieveinmyself.userservice.domains.dtos;
 import com.justbelieveinmyself.library.dto.Dto;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.userservice.domains.entities.User;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Set;

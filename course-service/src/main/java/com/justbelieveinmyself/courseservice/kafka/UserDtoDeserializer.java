@@ -1,7 +1,7 @@
-package com.justbelieveinmyself.userservice.kafka;
+package com.justbelieveinmyself.courseservice.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.UserDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class UserDtoDeserializer implements Deserializer<UserDto> {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Override
-    public void configure(Map<String, ?> configs, boolean isKey) {}
 
     @Override
     public UserDto deserialize(String s, byte[] data) {
@@ -25,7 +23,4 @@ public class UserDtoDeserializer implements Deserializer<UserDto> {
             throw new SerializationException("Error when deserializing byte[] to UserDto");
         }
     }
-
-    @Override
-    public void close() {}
 }

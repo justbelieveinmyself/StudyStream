@@ -24,9 +24,11 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false, unique = true)
-    private String email; // email
+    private String email;
+    @Column(name = "activation_code")
+    private String activationCode;
     @Enumerated(EnumType.STRING) @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", nullable = false))
     private Set<Role> roles;
     @OneToOne(mappedBy = "user", cascade = CascadeType.DETACH)
     private RefreshToken refreshToken;

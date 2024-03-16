@@ -6,13 +6,9 @@ import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
-import java.util.Map;
-
 public class UserDtoSerializer implements Serializer<UserDto> {
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Override
-    public void configure(Map<String, ?> configs, boolean isKey) {}
 
     @Override
     public byte[] serialize(String topic, UserDto data) {
@@ -28,6 +24,4 @@ public class UserDtoSerializer implements Serializer<UserDto> {
         }
     }
 
-    @Override
-    public void close() {}
 }

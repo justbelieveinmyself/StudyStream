@@ -12,4 +12,10 @@ public class KafkaTopicConfig {
     public NewTopic userRegistrationTopic() {
         return TopicBuilder.name("user-registration-topic").build();
     }
+
+    @Bean
+    public NewTopic emailVerificationTopic() {
+        return TopicBuilder.name("user-email-verify-topic").build();
+    }
+
 }

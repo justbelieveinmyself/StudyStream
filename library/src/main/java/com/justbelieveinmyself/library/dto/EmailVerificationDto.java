@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.authservice.domains.dtos;
+package com.justbelieveinmyself.library.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

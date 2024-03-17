@@ -1,16 +1,14 @@
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
-import com.justbelieveinmyself.authservice.domains.entities.User;
+import com.justbelieveinmyself.authservice.services.RefreshTokenService;
+import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.library.exception.InvalidRequestException;
 import com.justbelieveinmyself.authservice.services.AuthService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterDto registerDto, BindingResult result) {
@@ -38,28 +37,8 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<RefreshResponseDto> refresh(@RequestBody @Valid RefreshRequestDto refreshRequestDto, BindingResult result) {
         validateErrors(result);
-        RefreshResponseDto responseDto = authService.refreshToken(refreshRequestDto);
+        RefreshResponseDto responseDto = refreshTokenService.refreshToken(refreshRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @PatchMapping("/email")
-    public ResponseEntity<String> updateEmail(
-            @RequestBody @Valid UpdateEmailDto requestDto,
-            BindingResult result,
-            @RequestHeader("X-Username") String username
-    ) {
-        User authedUser = authService.findByUsername(username);
-        validateErrors(result);
-        authService.updateEmail(authedUser, requestDto);
-        return ResponseEntity.ok(requestDto.getEmail());
-    }
-
-    @GetMapping("/email")
-    public ResponseEntity<String> verifyEmail(
-            @RequestParam("code") @NotBlank String activationCode
-    ) {
-        authService.verifyEmail(activationCode);
-        return ResponseEntity.noContent().build();
     }
 
     private void validateErrors(BindingResult result) {

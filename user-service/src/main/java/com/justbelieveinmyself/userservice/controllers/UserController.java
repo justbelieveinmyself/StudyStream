@@ -6,7 +6,6 @@ import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -37,36 +36,36 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserDto> getCurrentUser(@RequestHeader("X-Username") String username) {
-        UserDto responseDto = userService.getUserByUsername(username);
+    public ResponseEntity<UserDto> getCurrentUser(@RequestHeader("X-User-Id") Long userId) {
+        UserDto responseDto = userService.getUserById(userId);
         return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping
     public ResponseEntity<UserDto> updateCurrentUser(
-            @RequestHeader("X-Username") String username,
+            @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid UpdateUserDto requestDto,
             BindingResult result
     ) {
         validateErrors(result);
-        UserDto responseDto = userService.updateUserByUsername(username, requestDto);
+        UserDto responseDto = userService.updateUserById(userId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping
     public ResponseEntity<UserDto> patchCurrentUser(
-            @RequestHeader("X-Username") String username,
+            @RequestHeader("X-User-Id") Long userId,
             @RequestBody UpdateUserDto requestDto
     ) {
-        UserDto responseDtp = userService.patchUserByUsername(username, requestDto);
+        UserDto responseDtp = userService.patchUserById(userId, requestDto);
         return ResponseEntity.ok(responseDtp);
     }
 
-    @DeleteMapping
+    @DeleteMapping //TODO: delete mapping by id only by admin. need to validate is this user is current? i think probably
     public ResponseEntity<ResponseMessage> deleteCurrentUser(
-            @RequestHeader("X-Username") String username
+            @RequestHeader("X-User-Id") Long userId
     ) {
-        userService.deleteUserByUsername(username);
+        userService.deleteUserById(userId);
         return ResponseEntity.noContent().build();
     }
 

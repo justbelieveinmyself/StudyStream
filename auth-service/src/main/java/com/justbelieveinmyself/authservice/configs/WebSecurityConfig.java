@@ -22,7 +22,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 public class WebSecurityConfig {
     private final AntPathRequestMatcher[] whiteList = {
-            AntPathRequestMatcher.antMatcher("/api/v1/auth/**")
+            AntPathRequestMatcher.antMatcher("/api/v1/auth/**"),
+            AntPathRequestMatcher.antMatcher("/api/v1/email")
     };
 
     @Bean

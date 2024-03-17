@@ -3,7 +3,7 @@ package com.justbelieveinmyself.authservice.domains.dtos;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class UpdateEmailDto {
+public class EmailDto {
     @Email(message = "Invalid email!")
     @NotBlank(message = "Please, enter your email!")
     private String email;

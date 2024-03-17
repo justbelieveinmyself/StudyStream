@@ -41,10 +41,12 @@ public class AuthenticationFilter implements GatewayFilter {
                 String token = bearerToken.replace(TOKEN_PREFIX, "");
                 DecodedJWT decodedJWT = verifyAndDecodeJWT(token);
                 String username = decodedJWT.getSubject();
+                Long userId = decodedJWT.getClaim("userId").asLong();
                 String[] roles = decodedJWT.getClaim("roles").as(String[].class);
 
                 ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                         .header("X-Username", username)
+                        .header("X-User-Id", userId.toString())
                         .header("X-User-Roles", roles).build();
 
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());

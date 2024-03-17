@@ -32,7 +32,7 @@ public class RefreshTokenService {
             refreshTokenRepository.delete(user.getRefreshToken());
             user.setRefreshToken(null);
         }
-        var accessToken = jwtUtils.createAccessToken(user.getUsername(), user.getRoles());
+        var accessToken = jwtUtils.createAccessToken(user);
 
         var refreshToken = refreshTokenRepository.save(RefreshToken.builder()
                 .user(user)
@@ -54,7 +54,7 @@ public class RefreshTokenService {
             refreshTokenRepository.delete(refreshToken);
             throw new RefreshTokenException("Refresh token is expired: " + refreshRequestDto.getRefreshToken());
         }
-        var accessToken = jwtUtils.createAccessToken(refreshToken.getUser().getUsername(), refreshToken.getUser().getRoles());
+        var accessToken = jwtUtils.createAccessToken(refreshToken.getUser());
         updateToken(refreshToken);
         return RefreshResponseDto.builder()
                 .accessToken(accessToken.getToken())

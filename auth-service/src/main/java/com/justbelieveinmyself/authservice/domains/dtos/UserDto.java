@@ -1,10 +1,8 @@
 package com.justbelieveinmyself.authservice.domains.dtos;
 
 import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.dto.Dto;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.justbelieveinmyself.library.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;

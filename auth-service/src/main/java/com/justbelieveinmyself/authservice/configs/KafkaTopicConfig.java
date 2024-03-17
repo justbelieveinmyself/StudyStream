@@ -18,4 +18,9 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("user-email-verify-topic").build();
     }
 
+    @Bean
+    public NewTopic emailUpdateTopic() {
+        return TopicBuilder.name("user-email-update-topic").build();
+    }
+
 }

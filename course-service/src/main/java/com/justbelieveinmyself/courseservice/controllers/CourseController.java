@@ -3,10 +3,12 @@ package com.justbelieveinmyself.courseservice.controllers;
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.services.CourseService;
+import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +26,8 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto) {
+    @ValidateErrors
+    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto, BindingResult result) {
         CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
         return ResponseEntity.ok(savedCourseDto);
     }
@@ -36,7 +39,13 @@ public class CourseController {
     }
 
     @PutMapping("/{courseId}")
-    public ResponseEntity<CourseDto> updateCourseById(@PathVariable Long courseId, @RequestHeader("X-UserId") Long userId, @RequestBody @Valid UpdateCourseDto updateCourseDto) {
+    @ValidateErrors
+    public ResponseEntity<CourseDto> updateCourseById(
+            @PathVariable Long courseId,
+            @RequestHeader("X-UserId") Long userId,
+            @RequestBody @Valid UpdateCourseDto updateCourseDto,
+            BindingResult result
+    ) {
         CourseDto courseDto = courseService.updateCourseById(courseId, userId, updateCourseDto);
         return ResponseEntity.ok(courseDto);
     }

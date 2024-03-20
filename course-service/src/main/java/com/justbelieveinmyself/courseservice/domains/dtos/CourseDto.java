@@ -42,6 +42,9 @@ public class CourseDto implements Dto<Course> {
         return courseDto;
     }
 
+    /**
+     * @return Course Entity without Author
+     */
     @Override
     public Course toEntity() {
         Course course = new Course();

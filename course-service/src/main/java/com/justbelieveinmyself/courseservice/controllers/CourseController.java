@@ -35,7 +35,7 @@ public class CourseController {
     @DeleteMapping("/{courseId}")
     public ResponseEntity<ResponseMessage> deleteCourseById(@PathVariable Long courseId, @RequestHeader("X-UserId") Long userId) {
         courseService.deleteCourseById(courseId, userId);
-        return ResponseEntity.ok(new ResponseMessage(200, "Course successfully deleted with id: " + courseId));
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{courseId}")

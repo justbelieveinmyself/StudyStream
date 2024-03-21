@@ -23,7 +23,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig {
     private final AntPathRequestMatcher[] whiteList = {
             AntPathRequestMatcher.antMatcher("/api/v1/auth/**"),
-            AntPathRequestMatcher.antMatcher("/api/v1/email")
+            AntPathRequestMatcher.antMatcher("/api/v1/email"),
+            AntPathRequestMatcher.antMatcher("/v3/api-docs"),
     };
 
     @Bean

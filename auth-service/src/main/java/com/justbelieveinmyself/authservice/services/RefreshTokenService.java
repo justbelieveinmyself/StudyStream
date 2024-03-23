@@ -50,7 +50,7 @@ public class RefreshTokenService {
     public RefreshResponseDto refreshToken(RefreshRequestDto refreshRequestDto) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshRequestDto.getRefreshToken())
                 .orElseThrow(() -> new RefreshTokenException("Refresh token not found: " + refreshRequestDto.getRefreshToken()));
-        if (isTokenExpired(refreshToken)) {
+        if (refreshToken.isExpired()) {
             refreshTokenRepository.delete(refreshToken);
             throw new RefreshTokenException("Refresh token is expired: " + refreshRequestDto.getRefreshToken());
         }
@@ -62,10 +62,6 @@ public class RefreshTokenService {
                 .refreshToken(refreshToken.getToken())
                 .refreshTokenExpiration(refreshToken.getExpiration())
                 .build();
-    }
-
-    private boolean isTokenExpired(RefreshToken refreshToken) {
-        return refreshToken.getExpiration().isBefore(ZonedDateTime.now(ZoneId.systemDefault()).toInstant());
     }
 
     private void updateToken(RefreshToken refreshToken) {

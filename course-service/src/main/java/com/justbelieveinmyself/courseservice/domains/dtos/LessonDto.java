@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-public abstract class LessonDto {
+public class LessonDto {
     private Long id;
     private String title;
     private String description;

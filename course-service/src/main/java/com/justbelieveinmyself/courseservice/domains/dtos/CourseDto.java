@@ -4,7 +4,10 @@ import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseStatus;
 import com.justbelieveinmyself.library.dto.Dto;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class CourseDto implements Dto<Course> {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     @NotBlank(message = "Please, enter title!")
     private String title;
@@ -23,13 +27,17 @@ public class CourseDto implements Dto<Course> {
     private Long authorId;
     @NotBlank(message = "Please, enter category!")
     private String category;
+    @NotNull(message = "Please, enter difficulty! BEGINNER, INTERMEDIATE or ADVANCED")
     private CourseDifficulty difficulty;
-    @NotBlank(message = "Please, enter duration in hours!")
+    @NotNull(message = "Please, enter duration in hours!")
+    @Min(value = 1, message = "Duration cannot be small than 1h!")
     private Integer duration;
-    @NotBlank(message = "Please, enter price!")
+    @NotNull(message = "Please, enter price!")
+    @Min(value = 0, message = "Price cannot be small than 0!")
     private BigDecimal price;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Double rating;
-    @NotBlank(message = "Please, enter status! ACTIVE or ARCHIVED")
+    @NotNull(message = "Please, enter status! ACTIVE or ARCHIVED")
     private CourseStatus status;
     private List<ModuleDto> modules;
 

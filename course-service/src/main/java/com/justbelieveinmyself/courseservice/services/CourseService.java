@@ -7,6 +7,7 @@ import com.justbelieveinmyself.courseservice.domains.exceptions.ForbiddenExcepti
 import com.justbelieveinmyself.courseservice.domains.exceptions.NotFoundException;
 import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +40,8 @@ public class CourseService {
         if (!course.getAuthor().getId().equals(authorUserId)) {
             throw new ForbiddenException("Only the author can delete his course!");
         }
-        // TODO: copy fields from updateCourseDto
+        BeanUtils.copyProperties(updateCourseDto, course);
+
         Course updatedCourse = courseRepository.save(course);
         return new CourseDto().fromEntity(updatedCourse);
     }

@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.courseservice.domains.dtos;
 
+import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
@@ -47,11 +48,16 @@ public class ModuleDto implements Dto<Module> {
     public Module toEntity() {
         Module entity = new Module();
         BeanUtils.copyProperties(this, entity);
-        throw new NotImplementedException();
-//        entity.setLessons(this.getLessons().stream().map((lessonDto) -> {
-//            return new
-//        }));
-//        return null;
-    }
+        entity.setLessons(this.getLessons().stream().map((lessonDto -> {
+            if (lessonDto instanceof PracticeLessonDto) {
+                return ((PracticeLessonDto) lessonDto).toEntity();
+            } else if (lessonDto instanceof TestLessonDto) {
+                return ((TestLessonDto) lessonDto).toEntity();
+            } else {
+                throw new IllegalArgumentException("Unknown type of lesson: " + lessonDto.getClass().getSimpleName());
+            }
+        })).collect(Collectors.toList()));
+        return entity;
+    } //TODO: add body to lesson
 
 }

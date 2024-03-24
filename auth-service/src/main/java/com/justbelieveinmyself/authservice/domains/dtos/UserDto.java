@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserDto implements Dto<User> {
-    private Long id;
+    private Long id; //TODO: validate what will if user post with id
     private String username;
     private String email;
     private Set<Role> roles;

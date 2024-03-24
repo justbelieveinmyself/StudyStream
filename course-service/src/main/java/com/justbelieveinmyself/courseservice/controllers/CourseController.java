@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,9 @@ public class CourseController {
     @ValidateErrors
     public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto, BindingResult result) {
         CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
-        return ResponseEntity.ok(savedCourseDto);
+        return new ResponseEntity<>(savedCourseDto, HttpStatus.CREATED);
     }
+    //TODO: exceptionhandler
 
     @Operation(summary = "Delete Course by ID", description = "Delete Course by ID")
     @DeleteMapping("/{courseId}")

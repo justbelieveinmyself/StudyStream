@@ -1,13 +1,13 @@
 package com.justbelieveinmyself.authservice.services;
 
-import com.justbelieveinmyself.authservice.domains.dtos.EmailUpdateDto;
-import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import com.justbelieveinmyself.authservice.domains.dtos.EmailDto;
+import com.justbelieveinmyself.authservice.domains.dtos.EmailUpdateDto;
 import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.authservice.exceptions.EmailVerificationException;
-import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
-import com.justbelieveinmyself.library.exception.UsernameOrEmailAlreadyExistsException;
+import com.justbelieveinmyself.library.dto.EmailVerificationDto;
+import com.justbelieveinmyself.library.exception.ConflictException;
+import com.justbelieveinmyself.library.exception.NotFoundException;
+import com.justbelieveinmyself.library.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class EmailService {
     @Transactional
     public void updateEmail(Long userId, EmailDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new UsernameOrEmailAlreadyExistsException("User with email already exists!");
+            throw new ConflictException("User with email already exists!");
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new UnauthorizedException("User not found with UserID: " + userId));
         user.setEmail(requestDto.getEmail());
@@ -45,7 +45,7 @@ public class EmailService {
     }
 
     public void verifyEmail(String activationCode) {
-        User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EmailVerificationException("Activation code already used!"));
+        User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new NotFoundException("Activation code not found or already used!"));
         user.setActivationCode(null);
         userRepository.save(user);
     }

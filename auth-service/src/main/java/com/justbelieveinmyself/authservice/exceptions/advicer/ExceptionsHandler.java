@@ -1,11 +1,9 @@
 package com.justbelieveinmyself.authservice.exceptions.advicer;
 
-import com.justbelieveinmyself.authservice.exceptions.EmailVerificationException;
-import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
-import com.justbelieveinmyself.library.exception.InvalidRequestException;
-import com.justbelieveinmyself.authservice.exceptions.RefreshTokenException;
-import com.justbelieveinmyself.library.exception.ResponseError;
-import com.justbelieveinmyself.library.exception.UsernameOrEmailAlreadyExistsException;
+import com.justbelieveinmyself.library.exception.ConflictException;
+import com.justbelieveinmyself.library.exception.UnprocessableEntityException;
+import com.justbelieveinmyself.library.dto.ResponseError;
+import com.justbelieveinmyself.library.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,22 +14,16 @@ import java.time.Instant;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
-    @ExceptionHandler(value = {UsernameOrEmailAlreadyExistsException.class, EmailVerificationException.class})
-    public ResponseEntity<ResponseError> handleUsernameOrEmailAlreadyExistsException(Exception e) {
+    @ExceptionHandler(value = {ConflictException.class})
+    public ResponseEntity<ResponseError> handleConflictException(ConflictException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 409);
         return new ResponseEntity<>(responseError, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = RefreshTokenException.class)
-    public ResponseEntity<ResponseError> handleRefreshTokenException(RefreshTokenException e) {
-        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 403);
-        return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(value = InvalidRequestException.class)
-    public ResponseEntity<ResponseError> handleInvalidRequestException(InvalidRequestException e) {
-        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 403);
-        return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(value = {UnprocessableEntityException.class})
+    public ResponseEntity<ResponseError> handleInvalidRequestException(UnprocessableEntityException e) {
+        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 422);
+        return new ResponseEntity<>(responseError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(value = UnauthorizedException.class)

@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.library.aspects;
 
-import com.justbelieveinmyself.library.exception.InvalidRequestException;
+import com.justbelieveinmyself.library.exception.UnprocessableEntityException;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -24,7 +24,7 @@ public class ValidationAspect {
             for (FieldError fieldError : result.getFieldErrors()) {
                 errorMessage.append(fieldError.getDefaultMessage()).append("\n");
             }
-            throw new InvalidRequestException(errorMessage.toString());
+            throw new UnprocessableEntityException(errorMessage.toString());
         }
     }
 

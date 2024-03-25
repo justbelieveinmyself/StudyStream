@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.courseservice.domains.exceptions;
+package com.justbelieveinmyself.library.exception;
 
 public class ForbiddenException extends RuntimeException {
     public ForbiddenException(String message) {

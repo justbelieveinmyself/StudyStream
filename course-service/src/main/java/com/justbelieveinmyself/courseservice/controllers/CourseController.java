@@ -41,7 +41,6 @@ public class CourseController {
         CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
         return new ResponseEntity<>(savedCourseDto, HttpStatus.CREATED);
     }
-    //TODO: exceptionhandler
 
     @Operation(summary = "Delete Course by ID", description = "Delete Course by ID")
     @DeleteMapping("/{courseId}")

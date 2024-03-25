@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.justbelieveinmyself.apigateway.configs.RouterValidator;
 import com.justbelieveinmyself.apigateway.exceptions.UnauthorizedException;
+import com.justbelieveinmyself.library.exception.UnauthorizedException;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -64,4 +65,5 @@ public class AuthenticationFilter implements GatewayFilter {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).build();
         return verifier.verify(accessToken);
     }
+
 }

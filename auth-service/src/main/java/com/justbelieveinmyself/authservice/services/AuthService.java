@@ -5,7 +5,7 @@ import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.library.enums.Role;
-import com.justbelieveinmyself.library.exception.UsernameOrEmailAlreadyExistsException;
+import com.justbelieveinmyself.library.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +30,7 @@ public class AuthService {
     @Transactional
     public UserDto register(RegisterDto registerDto) {
         if (userRepository.existsByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail())) {
-            throw new UsernameOrEmailAlreadyExistsException("User with username or email already exists!");
+            throw new ConflictException("User with username or email already exists!");
         }
         User user = new User();
         user.setUsername(registerDto.getUsername());

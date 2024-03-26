@@ -21,14 +21,14 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(value = {UnprocessableEntityException.class})
-    public ResponseEntity<ResponseError> handleInvalidRequestException(UnprocessableEntityException e) {
+    public ResponseEntity<ResponseError> handleUnprocessableEntityException(UnprocessableEntityException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 422);
         return new ResponseEntity<>(responseError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(value = UnauthorizedException.class)
     public ResponseEntity<ResponseError> handleUnauthorizedException(UnauthorizedException e) {
-        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 402);
+        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 401);
         return new ResponseEntity<>(responseError, HttpStatus.UNAUTHORIZED);
     }
 

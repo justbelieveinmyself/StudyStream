@@ -16,8 +16,8 @@ public class ExceptionsHandler {
     @ExceptionHandler(value = UnauthorizedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ResponseError> handleUnauthorizedException(UnauthorizedException ex) {
-        ResponseError responseError = new ResponseError(ex.getMessage(), Instant.now(), 403);
-        return new ResponseEntity<>(responseError, HttpStatus.FORBIDDEN);
+        ResponseError responseError = new ResponseError(ex.getMessage(), Instant.now(), 401);
+        return new ResponseEntity<>(responseError, HttpStatus.UNAUTHORIZED);
     }
 
 }

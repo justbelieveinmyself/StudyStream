@@ -3,18 +3,29 @@ package com.justbelieveinmyself.courseservice.controllers;
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.services.CourseService;
+import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/course")
+@CrossOrigin
 @RequiredArgsConstructor
+@Tag(name = "Course API", description = "Create, get, update and delete courses")
+@SecurityRequirement(name = "Bearer Authentication")
 public class CourseController {
     private final CourseService courseService;
 
+    @Operation(summary = "Get Course by ID", description = "Get Course by ID")
     @GetMapping("/{courseId}")
     public ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId) {
         CourseDto courseDto = courseService.getCourseById(courseId);
@@ -23,20 +34,33 @@ public class CourseController {
         return ResponseEntity.ok(courseDto);
     }
 
+    @Operation(summary = "Create Course", description = "Create Course")
     @PostMapping
-    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto) {
+    @ValidateErrors
+    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto, BindingResult result) {
         CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
-        return ResponseEntity.ok(savedCourseDto);
+        return new ResponseEntity<>(savedCourseDto, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Delete Course by ID", description = "Delete Course by ID")
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<ResponseMessage> deleteCourseById(@PathVariable Long courseId, @RequestHeader("X-UserId") Long userId) {
+    public ResponseEntity<ResponseMessage> deleteCourseById(
+            @PathVariable Long courseId,
+            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId
+    ) {
         courseService.deleteCourseById(courseId, userId);
-        return ResponseEntity.ok(new ResponseMessage(200, "Course successfully deleted with id: " + courseId));
+        return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Update Course by ID", description = "Update Course by ID")
     @PutMapping("/{courseId}")
-    public ResponseEntity<CourseDto> updateCourseById(@PathVariable Long courseId, @RequestHeader("X-UserId") Long userId, @RequestBody @Valid UpdateCourseDto updateCourseDto) {
+    @ValidateErrors
+    public ResponseEntity<CourseDto> updateCourseById(
+            @PathVariable Long courseId,
+            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId,
+            @RequestBody @Valid UpdateCourseDto updateCourseDto,
+            BindingResult result
+    ) {
         CourseDto courseDto = courseService.updateCourseById(courseId, userId, updateCourseDto);
         return ResponseEntity.ok(courseDto);
     }

@@ -1,10 +1,8 @@
 package com.justbelieveinmyself.authservice.domains.dtos;
 
 import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.dto.Dto;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.justbelieveinmyself.library.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
@@ -14,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserDto implements Dto<User> {
-    private Long id;
+    private Long id; //TODO: validate what will if user post with id
     private String username;
     private String email;
     private Set<Role> roles;

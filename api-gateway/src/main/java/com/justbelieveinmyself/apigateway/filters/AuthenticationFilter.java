@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.justbelieveinmyself.apigateway.configs.RouterValidator;
-import com.justbelieveinmyself.apigateway.exceptions.UnauthorizedException;
+import com.justbelieveinmyself.library.exception.UnauthorizedException;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -41,10 +41,12 @@ public class AuthenticationFilter implements GatewayFilter {
                 String token = bearerToken.replace(TOKEN_PREFIX, "");
                 DecodedJWT decodedJWT = verifyAndDecodeJWT(token);
                 String username = decodedJWT.getSubject();
+                Long userId = decodedJWT.getClaim("userId").asLong();
                 String[] roles = decodedJWT.getClaim("roles").as(String[].class);
 
                 ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                         .header("X-Username", username)
+                        .header("X-User-Id", userId.toString())
                         .header("X-User-Roles", roles).build();
 
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
@@ -62,4 +64,5 @@ public class AuthenticationFilter implements GatewayFilter {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).build();
         return verifier.verify(accessToken);
     }
+
 }

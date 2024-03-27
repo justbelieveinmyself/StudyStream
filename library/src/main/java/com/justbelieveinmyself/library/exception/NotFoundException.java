@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.courseservice.domains.exceptions;
+package com.justbelieveinmyself.library.exception;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,4 +26,9 @@ public class RefreshToken {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public boolean isExpired() {
+        return this.getExpiration().isBefore(ZonedDateTime.now(ZoneId.systemDefault()).toInstant());
+    }
+
 }

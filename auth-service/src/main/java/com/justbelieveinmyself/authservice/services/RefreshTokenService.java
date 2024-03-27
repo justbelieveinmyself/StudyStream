@@ -1,20 +1,18 @@
 package com.justbelieveinmyself.authservice.services;
 
-import com.justbelieveinmyself.authservice.domains.dtos.AccessToken;
 import com.justbelieveinmyself.authservice.domains.dtos.RefreshRequestDto;
 import com.justbelieveinmyself.authservice.domains.dtos.RefreshResponseDto;
 import com.justbelieveinmyself.authservice.domains.entities.RefreshToken;
 import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.authservice.exceptions.RefreshTokenException;
 import com.justbelieveinmyself.authservice.jwt.JwtUtils;
 import com.justbelieveinmyself.authservice.repository.RefreshTokenRepository;
+import com.justbelieveinmyself.library.exception.NotFoundException;
+import com.justbelieveinmyself.library.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -32,7 +30,7 @@ public class RefreshTokenService {
             refreshTokenRepository.delete(user.getRefreshToken());
             user.setRefreshToken(null);
         }
-        var accessToken = jwtUtils.createAccessToken(user.getUsername(), user.getRoles());
+        var accessToken = jwtUtils.createAccessToken(user);
 
         var refreshToken = refreshTokenRepository.save(RefreshToken.builder()
                 .user(user)
@@ -49,12 +47,12 @@ public class RefreshTokenService {
 
     public RefreshResponseDto refreshToken(RefreshRequestDto refreshRequestDto) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshRequestDto.getRefreshToken())
-                .orElseThrow(() -> new RefreshTokenException("Refresh token not found: " + refreshRequestDto.getRefreshToken()));
-        if (isTokenExpired(refreshToken)) {
+                .orElseThrow(() -> new NotFoundException("Refresh token not found: " + refreshRequestDto.getRefreshToken()));
+        if (refreshToken.isExpired()) {
             refreshTokenRepository.delete(refreshToken);
-            throw new RefreshTokenException("Refresh token is expired: " + refreshRequestDto.getRefreshToken());
+            throw new UnauthorizedException("Refresh token is expired: " + refreshRequestDto.getRefreshToken());
         }
-        var accessToken = jwtUtils.createAccessToken(refreshToken.getUser().getUsername(), refreshToken.getUser().getRoles());
+        var accessToken = jwtUtils.createAccessToken(refreshToken.getUser());
         updateToken(refreshToken);
         return RefreshResponseDto.builder()
                 .accessToken(accessToken.getToken())
@@ -62,10 +60,6 @@ public class RefreshTokenService {
                 .refreshToken(refreshToken.getToken())
                 .refreshTokenExpiration(refreshToken.getExpiration())
                 .build();
-    }
-
-    private boolean isTokenExpired(RefreshToken refreshToken) {
-        return refreshToken.getExpiration().isBefore(ZonedDateTime.now(ZoneId.systemDefault()).toInstant());
     }
 
     private void updateToken(RefreshToken refreshToken) {

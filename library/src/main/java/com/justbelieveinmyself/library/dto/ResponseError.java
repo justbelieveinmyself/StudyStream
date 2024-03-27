@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.library.exception;
+package com.justbelieveinmyself.library.dto;
 
 import java.time.Instant;
 

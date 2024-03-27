@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.userservice.services;
 
+import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.domains.entities.User;
@@ -18,26 +19,12 @@ public class UserService {
         return new UserDto().fromEntity(user);
     }
 
-    public void createNewUser(User user) {
-        userRepository.save(user);
+    public void createNewUser(UserDto user) {
+        userRepository.save(user.toEntity());
     }
 
     public UserDto updateUserById(Long userId, UpdateUserDto dto) {
         User user = findById(userId);
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setPhone(dto.getPhone());
-        User savedUser = userRepository.save(user);
-        return new UserDto().fromEntity(savedUser);
-    }
-
-    public UserDto getUserByUsername(String username) {
-        User user = findByUsername(username);
-        return new UserDto().fromEntity(user);
-    }
-
-    public UserDto updateUserByUsername(String username, UpdateUserDto dto) {
-        User user = findByUsername(username);
         user.setFirstName(dto.getFirstName()); // id, username - cannot change; email - by patch with verification; roles - by user with authorities
         user.setLastName(dto.getLastName());
         user.setPhone(dto.getPhone());
@@ -45,13 +32,13 @@ public class UserService {
         return new UserDto().fromEntity(savedUser);
     }
 
-    public void deleteUserByUsername(String username) {
-        User user = findByUsername(username);
+    public void deleteUserById(Long userId) {
+        User user = findById(userId);
         userRepository.delete(user);
     }
 
-    public UserDto patchUserByUsername(String username, UpdateUserDto dto) {
-        User user = findByUsername(username);
+    public UserDto patchUserById(Long userId, UpdateUserDto dto) {
+        User user = findById(userId);
         if (dto.getFirstName() != null) {
             user.setFirstName(dto.getFirstName());
         }
@@ -65,13 +52,14 @@ public class UserService {
         return new UserDto().fromEntity(savedUser);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found with Username: " + username));
-    }
-
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with UserID: " + id));
     }
 
+    public void updateEmail(EmailUpdateDto emailUpdateDto) {
+        User user = findById(emailUpdateDto.getUserId());
+        user.setEmail(emailUpdateDto.getEmail());
+        userRepository.save(user);
+    }
 }
 

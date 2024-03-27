@@ -6,6 +6,7 @@
         <set>
           <option value="X-Username" />
           <option value="X-UserId" />
+          <option value="X-User-Id" />
         </set>
       </option>
     </inspection_tool>

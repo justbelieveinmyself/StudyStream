@@ -3,10 +3,11 @@ package com.justbelieveinmyself.courseservice.services;
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
-import com.justbelieveinmyself.courseservice.domains.exceptions.ForbiddenException;
-import com.justbelieveinmyself.courseservice.domains.exceptions.NotFoundException;
 import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
+import com.justbelieveinmyself.library.exception.ForbiddenException;
+import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,8 +40,10 @@ public class CourseService {
         if (!course.getAuthor().getId().equals(authorUserId)) {
             throw new ForbiddenException("Only the author can delete his course!");
         }
-        // TODO: copy fields from updateCourseDto
+        BeanUtils.copyProperties(updateCourseDto, course);
+
         Course updatedCourse = courseRepository.save(course);
         return new CourseDto().fromEntity(updatedCourse);
     }
+
 }

@@ -20,12 +20,18 @@ public class GatewayConfig {
                 .route("auth-service", r -> r.path("/api/v1/auth/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://auth-service"))
-                .route("user-service", r -> r.path("/api/v1/user/**")
+                .route("auth-service-email", r -> r.path("/api/v1/email")
+                        .filters(f -> f.filter(authFilter))
+                        .uri("lb://auth-service"))
+                .route("user-service", r -> r.path("/api/v1/user/**", "/api/v1/user")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://user-service"))
-                .route("user-service", r -> r.path("/api/v1/user")
+                .route("course-service", r -> r.path("/api/v1/course/**", "/api/v1/course")
                         .filters(f -> f.filter(authFilter))
-                        .uri("lb://user-service")
+                        .uri("lb://course-service"))
+                .route("swagger-redirect", r -> r.path("/v3/api-docs/**")
+                        .filters(f -> f.rewritePath("/v3/api-docs/(?<name>.*)", "/${name}/v3/api-docs"))
+                        .uri("lb://api-gateway")
                 ).build();
     }
 

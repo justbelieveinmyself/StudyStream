@@ -1,7 +1,9 @@
 package com.justbelieveinmyself.userservice.configs;
 
+import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
-import com.justbelieveinmyself.userservice.kafka.UserDeserializer;
+import com.justbelieveinmyself.userservice.kafka.EmailUpdateDeserializer;
+import com.justbelieveinmyself.userservice.kafka.UserDtoDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -22,14 +24,30 @@ public class KafkaConsumerConfig {
         HashMap<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDtoDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> userKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UserDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(userConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, EmailUpdateDto> emailUpdateConsumerFactory() {
+        HashMap<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EmailUpdateDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, EmailUpdateDto>> emailKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, EmailUpdateDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(emailUpdateConsumerFactory());
         return factory;
     }
 

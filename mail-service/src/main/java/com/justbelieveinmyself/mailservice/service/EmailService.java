@@ -18,13 +18,18 @@ public class EmailService {
 
 
     public void sendVerification(EmailVerificationDto emailVerificationDto) {
-        String message = String.format("Hello, %s! \n" + "Welcome to StudySteam. Please, visit next link to verify email: %s/api/v1/auth/email?code=%s",
+        String message = String.format(
+                "Hello, %s, \n\n" +
+                        "Welcome to StudySteam. Please, visit this link below to finish verification:\n\n%s/api/v1/email?code=%s\n\n" +
+                        "If you did not request this, please REPLY IMMEDIATELY as your account may be in danger.\n\n" +
+                "--\nStudyStream | %s",
                 emailVerificationDto.getUsername(),
                 hostname,
-                emailVerificationDto.getActivationCode()
+                emailVerificationDto.getActivationCode(),
+                hostname
         );
 
-        send(emailVerificationDto.getEmail(), "Verification", message);
+        send(emailVerificationDto.getEmail(), "StudySteam`account verification", message);
     }
 
     public void send(String consumerEmail, String subject, String message) {

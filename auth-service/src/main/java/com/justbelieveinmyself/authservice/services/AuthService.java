@@ -1,12 +1,13 @@
 package com.justbelieveinmyself.authservice.services;
 
-import com.justbelieveinmyself.authservice.domains.dtos.*;
+import com.justbelieveinmyself.authservice.domains.dtos.LoginRequestDto;
+import com.justbelieveinmyself.authservice.domains.dtos.RefreshResponseDto;
+import com.justbelieveinmyself.authservice.domains.dtos.RegisterDto;
+import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.authservice.domains.entities.User;
-import com.justbelieveinmyself.authservice.exceptions.EmailVerificationException;
-import com.justbelieveinmyself.authservice.exceptions.UnauthorizedException;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.library.enums.Role;
-import com.justbelieveinmyself.library.exception.UsernameOrEmailAlreadyExistsException;
+import com.justbelieveinmyself.library.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,12 +27,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final KafkaTemplate<String, UserDto> userDtoKafkaTemplate;
-    private final KafkaTemplate<String, EmailVerificationDto> stringKafkaTemplate;
+    private final EmailService emailService;
 
     @Transactional
     public UserDto register(RegisterDto registerDto) {
         if (userRepository.existsByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail())) {
-            throw new UsernameOrEmailAlreadyExistsException("User with username or email already exists!");
+            throw new ConflictException("User with username or email already exists!");
         }
         User user = new User();
         user.setUsername(registerDto.getUsername());
@@ -49,8 +50,7 @@ public class AuthService {
         userDto.setPhone(registerDto.getPhone());
         userDtoKafkaTemplate.send("user-registration-topic", userDto);
 
-        EmailVerificationDto emailVerificationDto = new EmailVerificationDto(userDto.getUsername(), userDto.getEmail(), activationCode);
-        stringKafkaTemplate.send("user-email-verify-topic", emailVerificationDto);
+        emailService.sendActivationCode(userDto.getUsername(), userDto.getEmail(), activationCode);
 
         return userDto;
     }
@@ -63,27 +63,4 @@ public class AuthService {
         return refreshResponseDto;
     }
 
-    public RefreshResponseDto refreshToken(RefreshRequestDto refreshRequestDto) {
-        return refreshTokenService.refreshToken(refreshRequestDto);
-    }
-
-    @Transactional
-    public void updateEmail(User authedUser, UpdateEmailDto requestDto) {
-        if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new UsernameOrEmailAlreadyExistsException("User with email already exists!");
-        }
-        authedUser.setEmail(requestDto.getEmail());
-        userRepository.save(authedUser);
-        // TODO: send this change to user-email topic and invoke email service to send verification
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UnauthorizedException("Bearer token not found!"));
-    }
-
-    public void verifyEmail(String activationCode) {
-        User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new EmailVerificationException("Activation code already used!"));
-        user.setActivationCode(null);
-        userRepository.save(user);
-    }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class EmailKafkaListener {
     private final UserService userService;
 
-    @KafkaListener(topics = {"user-email-update-topic"}, groupId = "group-id", containerFactory = "emailKafkaListenerContainerFactory")
+    @KafkaListener(topics = {"user-email-update-topic"}, groupId = "email-group-id", containerFactory = "emailKafkaListenerContainerFactory")
     public void listenEmailUpdateDto(EmailUpdateDto emailUpdateDto) {
         System.out.println("New message: " + emailUpdateDto.toString());
         userService.updateEmail(emailUpdateDto);

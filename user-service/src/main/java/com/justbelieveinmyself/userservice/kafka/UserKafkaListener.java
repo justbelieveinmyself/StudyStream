@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserKafkaListener {
     private final UserService userService;
 
-    @KafkaListener(topics = {"user-registration-topic"}, groupId = "group-id", containerFactory = "userKafkaListenerContainerFactory")
+    @KafkaListener(topics = {"user-registration-topic"}, groupId = "registration-group-id", containerFactory = "userKafkaListenerContainerFactory")
     public void listenUserDto(UserDto userDto) {
         System.out.println("New message: " + userDto.toString());
         userService.createNewUser(userDto);

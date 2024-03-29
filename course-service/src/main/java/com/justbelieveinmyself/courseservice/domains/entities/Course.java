@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,8 +41,14 @@ public class Course {
     private Double rating;
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
-    @OneToMany(mappedBy = "course", orphanRemoval = true)
-    private List<Module> modules;
+    @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Module> modules = new ArrayList<>();
     @OneToOne(mappedBy = "course")
     private Enrollment enrollment;
+
+    public void addModule(Module module) {
+        module.setCourse(this);
+        this.modules.add(module);
+    }
+
 }

@@ -6,7 +6,6 @@ import com.justbelieveinmyself.library.dto.Dto;
 import org.springframework.beans.BeanUtils;
 
 public class PracticeLessonDto extends LessonDto implements Dto<PracticeLesson> {
-    private String description;
     private String instruction;
 
     @Override
@@ -14,7 +13,9 @@ public class PracticeLessonDto extends LessonDto implements Dto<PracticeLesson> 
         PracticeLessonDto dto = new PracticeLessonDto();
         BeanUtils.copyProperties(entity, dto);
         dto.setLessonType("PRACTICE");
-        dto.setModuleId(entity.getModule().getId());
+        if (entity.getModule() != null) {
+            dto.setModuleId(entity.getModule().getId());
+        }
         return dto;
     }
 

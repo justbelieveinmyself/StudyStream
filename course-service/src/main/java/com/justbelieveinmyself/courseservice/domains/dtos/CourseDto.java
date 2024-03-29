@@ -1,6 +1,7 @@
 package com.justbelieveinmyself.courseservice.domains.dtos;
 
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
+import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseStatus;
 import com.justbelieveinmyself.library.dto.Dto;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,9 @@ public class CourseDto implements Dto<Course> {
         CourseDto courseDto = new CourseDto();
         BeanUtils.copyProperties(course, courseDto);
         courseDto.setAuthorId(course.getAuthor().getId());
-        courseDto.setModules(course.getModules().stream().map((module) -> new ModuleDto().fromEntity(module)).collect(Collectors.toList()));
+        if (!course.getModules().isEmpty()) {
+            courseDto.setModules(course.getModules().stream().map((module) -> new ModuleDto().fromEntity(module)).collect(Collectors.toList()));
+        }
         return courseDto;
     }
 
@@ -57,8 +61,12 @@ public class CourseDto implements Dto<Course> {
     public Course toEntity() {
         Course course = new Course();
         BeanUtils.copyProperties(this, course);
-        course.setModules(this.getModules().stream().map(ModuleDto::toEntity).collect(Collectors.toList()));
-        //author?
+
+        for (ModuleDto moduleDto : this.getModules()) {
+            Module module = moduleDto.toEntity();
+            course.addModule(module);
+        }
+
         return course;
     }
 

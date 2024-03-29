@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,5 +30,5 @@ public class Module {
     @JoinColumn(nullable = false, name = "course_id")
     private Course course;
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    private List<Lesson> lessons;
+    private List<Lesson> lessons = new ArrayList<>();
 }

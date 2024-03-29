@@ -2,6 +2,7 @@ package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.entities.User;
 import com.justbelieveinmyself.courseservice.services.CourseService;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
@@ -37,8 +38,12 @@ public class CourseController {
     @Operation(summary = "Create Course", description = "Create Course")
     @PostMapping
     @ValidateErrors
-    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto, BindingResult result) {
-        CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
+    public ResponseEntity<CourseDto> createNewCourse(
+            @RequestBody @Valid CourseDto courseDto,
+            BindingResult result,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
+    ) {
+        CourseDto savedCourseDto = courseService.createNewCourse(courseDto, userId);
         return new ResponseEntity<>(savedCourseDto, HttpStatus.CREATED);
     }
 

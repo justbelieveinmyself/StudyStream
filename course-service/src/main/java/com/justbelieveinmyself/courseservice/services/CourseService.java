@@ -17,16 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+
+    public Course findById(Long courseId) {
+        return courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
+    }
 
     public CourseDto getCourseById(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
+        Course course = findById(courseId);
         return new CourseDto().fromEntity(course);
     }
 
     @Transactional
     public CourseDto createNewCourse(CourseDto courseDto, Long authorId) {
-        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundException("User not found with UserID: " + authorId));
+        User author = userService.findById(authorId);
         Course course = courseDto.toEntity();
         course.setAuthor(author);
         Course savedCourse = courseRepository.save(course);
@@ -34,7 +38,7 @@ public class CourseService {
     }
 
     public void deleteCourseById(Long courseId, Long authorUserId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
+        Course course = findById(courseId);
         if (!course.getAuthor().getId().equals(authorUserId)) {
             throw new ForbiddenException("Only the author can delete his course!");
         }
@@ -42,7 +46,7 @@ public class CourseService {
     }
 
     public CourseDto updateCourseById(Long courseId, Long authorUserId, UpdateCourseDto updateCourseDto) {
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
+        Course course = findById(courseId);
         if (!course.getAuthor().getId().equals(authorUserId)) {
             throw new ForbiddenException("Only the author can delete his course!");
         }

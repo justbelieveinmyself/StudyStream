@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
+import com.justbelieveinmyself.courseservice.domains.annotations.CheckModuleExistsInCourse;
 import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateModuleDto;
 import com.justbelieveinmyself.courseservice.services.ModuleService;
@@ -27,7 +28,11 @@ public class ModuleController {
 
     @Operation(summary = "Get Module by ID", description = "Get Module by ID")
     @GetMapping("/{moduleId}")
-    public ResponseEntity<ModuleDto> getModuleById(@PathVariable Long moduleId) {
+    @CheckModuleExistsInCourse
+    public ResponseEntity<ModuleDto> getModuleById(
+            @PathVariable Long courseId,
+            @PathVariable Long moduleId
+    ) {
         ModuleDto moduleDto = moduleService.getModuleById(moduleId);
         return ResponseEntity.ok(moduleDto);
     }
@@ -47,24 +52,28 @@ public class ModuleController {
 
     @Operation(summary = "Delete Module by ID", description = "Delete Module by ID")
     @DeleteMapping("/{moduleId}")
+    @CheckModuleExistsInCourse
     public ResponseEntity<ResponseMessage> deleteModuleById(
+            @PathVariable Long courseId,
             @PathVariable Long moduleId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
     ) {
-        moduleService.deleteModuleById(moduleId, userId);
+        moduleService.deleteModuleById(courseId, moduleId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Update Module by ID", description = "Update Module by ID")
     @PutMapping("/{moduleId}")
     @ValidateErrors
+    @CheckModuleExistsInCourse
     public ResponseEntity<ModuleDto> updateModuleById(
+            @PathVariable Long courseId,
             @PathVariable Long moduleId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid UpdateModuleDto updateModuleDto,
             BindingResult result
     ) {
-        ModuleDto moduleDto = moduleService.updateModuleById(moduleId, userId, updateModuleDto);
+        ModuleDto moduleDto = moduleService.updateModuleById(courseId, moduleId, userId, updateModuleDto);
         return ResponseEntity.ok(moduleDto);
     }
 

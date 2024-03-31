@@ -23,6 +23,10 @@ public class CourseService {
         return courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
     }
 
+    public boolean existByIdAndAuthorId(Long courseId, Long authorId) {
+        return courseRepository.existsByIdAndAuthorId(courseId, authorId);
+    }
+
     public CourseDto getCourseById(Long courseId) {
         Course course = findById(courseId);
         return new CourseDto().fromEntity(course);
@@ -39,21 +43,27 @@ public class CourseService {
 
     public void deleteCourseById(Long courseId, Long authorUserId) {
         Course course = findById(courseId);
-        if (!course.getAuthor().getId().equals(authorUserId)) {
-            throw new ForbiddenException("Only the author can delete his course!");
-        }
+
+        checkUserHasAccessToCourse(course, authorUserId);
+
         courseRepository.delete(course);
     }
 
     public CourseDto updateCourseById(Long courseId, Long authorUserId, UpdateCourseDto updateCourseDto) {
         Course course = findById(courseId);
-        if (!course.getAuthor().getId().equals(authorUserId)) {
-            throw new ForbiddenException("Only the author can delete his course!");
-        }
+
+        checkUserHasAccessToCourse(course, authorUserId);
+
         BeanUtils.copyProperties(updateCourseDto, course);
 
         Course updatedCourse = courseRepository.save(course);
         return new CourseDto().fromEntity(updatedCourse);
+    }
+
+    private void checkUserHasAccessToCourse(Course course, Long userId) {
+        if (!course.getAuthor().getId().equals(userId)) {
+            throw new ForbiddenException("Only the author can edit his course!");
+        }
     }
 
 }

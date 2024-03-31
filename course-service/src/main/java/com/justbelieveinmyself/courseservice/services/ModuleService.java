@@ -4,11 +4,9 @@ import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateModuleDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
-import com.justbelieveinmyself.courseservice.domains.entities.User;
 import com.justbelieveinmyself.courseservice.repositories.ModuleRepository;
 import com.justbelieveinmyself.library.exception.ForbiddenException;
 import com.justbelieveinmyself.library.exception.NotFoundException;
-import com.justbelieveinmyself.library.exception.UnprocessableEntityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,12 @@ public class ModuleService {
                 new NotFoundException("Module not found with ModuleID: " + moduleId));
     }
 
+    private void checkUserHasAccessToCourse(Long courseId, Long userId) {
+        if (!courseService.existByIdAndAuthorId(courseId, userId)) {
+            throw new ForbiddenException("Only the author can edit his course!");
+        }
+    }
+
     public ModuleDto getModuleById(Long moduleId) {
         Module module = findById(moduleId);
         return new ModuleDto().fromEntity(module);
@@ -33,9 +37,7 @@ public class ModuleService {
     public ModuleDto createNewModule(ModuleDto moduleDto, Long courseId, Long userId) {
         Course course = courseService.findById(courseId);
 
-        if (!course.getAuthor().getId().equals(userId)) {
-            throw new ForbiddenException("Only the author can edit his course!");
-        }
+        checkUserHasAccessToCourse(courseId, userId);
 
         Module module = moduleDto.toEntity();
         module.setCourse(course);
@@ -44,20 +46,18 @@ public class ModuleService {
         return new ModuleDto().fromEntity(savedModule);
     }
 
-    public void deleteModuleById(Long moduleId, Long userId) {
+    public void deleteModuleById(Long courseId, Long moduleId, Long userId) {
         Module module = findById(moduleId);
-        if (!module.getCourse().getAuthor().getId().equals(userId)) {
-            throw new ForbiddenException("Only the author can edit his course!");
-        }
+
+        checkUserHasAccessToCourse(courseId, userId);
+
         moduleRepository.delete(module);
     }
 
-    public ModuleDto updateModuleById(Long moduleId, Long userId, UpdateModuleDto updateModuleDto) {
+    public ModuleDto updateModuleById(Long courseId, Long moduleId, Long userId, UpdateModuleDto updateModuleDto) {
         Module module = findById(moduleId);
 
-        if (!module.getCourse().getAuthor().getId().equals(userId)) {
-            throw new ForbiddenException("Only the author can edit his course!");
-        }
+        checkUserHasAccessToCourse(courseId, userId);
 
         BeanUtils.copyProperties(updateModuleDto, module);
         Module savedModule = moduleRepository.save(module);

@@ -51,7 +51,7 @@ public class CourseController {
     @DeleteMapping("/{courseId}")
     public ResponseEntity<ResponseMessage> deleteCourseById(
             @PathVariable Long courseId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
     ) {
         courseService.deleteCourseById(courseId, userId);
         return ResponseEntity.noContent().build();
@@ -62,7 +62,7 @@ public class CourseController {
     @ValidateErrors
     public ResponseEntity<CourseDto> updateCourseById(
             @PathVariable Long courseId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid UpdateCourseDto updateCourseDto,
             BindingResult result
     ) {

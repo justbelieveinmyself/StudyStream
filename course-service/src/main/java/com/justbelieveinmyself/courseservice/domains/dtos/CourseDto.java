@@ -23,26 +23,26 @@ import java.util.stream.Collectors;
 public class CourseDto implements Dto<Course> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-    @NotBlank(message = "Please, enter title of course!")
+    @NotBlank(message = "Please, enter [title] of course!")
     private String title;
     private String description;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Instant creationTime;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long authorId;
-    @NotBlank(message = "Please, enter category of course!")
+    @NotBlank(message = "Please, enter [category] of course!")
     private String category;
-    @NotNull(message = "Please, enter difficulty of course! BEGINNER, INTERMEDIATE or ADVANCED")
+    @NotNull(message = "Please, enter [difficulty] of course! BEGINNER, INTERMEDIATE or ADVANCED")
     private CourseDifficulty difficulty;
-    @NotNull(message = "Please, enter duration of course in hours!")
+    @NotNull(message = "Please, enter [duration] of course in hours!")
     @Min(value = 1, message = "Duration of course cannot be small than 1h!")
     private Integer duration;
-    @NotNull(message = "Please, enter price of course!")
+    @NotNull(message = "Please, enter [price] of course!")
     @Min(value = 0, message = "Price of course cannot be small than 0!")
     private BigDecimal price;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Double rating;
-    @NotNull(message = "Please, enter status of course! ACTIVE or ARCHIVED")
+    @NotNull(message = "Please, enter [status] of course! ACTIVE or ARCHIVED")
     private CourseStatus status;
     private List<ModuleDto> modules;
 
@@ -51,14 +51,16 @@ public class CourseDto implements Dto<Course> {
         CourseDto courseDto = new CourseDto();
         BeanUtils.copyProperties(course, courseDto);
         courseDto.setAuthorId(course.getAuthor().getId());
+
         if (!course.getModules().isEmpty()) {
             courseDto.setModules(course.getModules().stream().map((module) -> new ModuleDto().fromEntity(module)).collect(Collectors.toList()));
         }
+
         return courseDto;
     }
 
     /**
-     * @return Course Entity without id, authorId, rating, creationTime,
+     * @return Course Entity without id, author, rating, creationTime,
      */
     @Override
     public Course toEntity() {

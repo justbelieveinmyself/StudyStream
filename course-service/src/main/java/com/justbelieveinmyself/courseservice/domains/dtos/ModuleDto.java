@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ModuleDto implements Dto<Module> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-    @NotBlank(message = "Please, enter title of module!")
+    @NotBlank(message = "Please, enter [title] of module!")
     private String title;
     private String description;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -46,14 +46,16 @@ public class ModuleDto implements Dto<Module> {
                 }
             }).collect(Collectors.toList()));
         }
+
         if (entity.getCourse() != null) {
             moduleDto.setCourseId(entity.getCourse().getId());
         }
+
         return moduleDto;
     }
 
     /**
-     * @return Module Entity without id, courseId, creationTime,
+     * @return Module Entity without id, course, creationTime
      */
     @Override
     public Module toEntity() {

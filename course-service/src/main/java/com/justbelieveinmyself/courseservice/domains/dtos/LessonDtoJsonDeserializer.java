@@ -15,7 +15,7 @@ public class LessonDtoJsonDeserializer extends JsonDeserializer<LessonDto> {
     public LessonDto deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         ObjectNode node = jsonParser.readValueAsTree();
         if (node.has("lessonType")) {
-            String lessonType = node.get("lessonType").asText();
+            String lessonType = node.get("lessonType").asText().toUpperCase();
             if ("PRACTICE".equals(lessonType)) {
                 return jsonParser.getCodec().treeToValue(node, PracticeLessonDto.class);
             } else if ("TEST".equals(lessonType)) {

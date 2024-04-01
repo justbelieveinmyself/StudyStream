@@ -2,9 +2,11 @@ package com.justbelieveinmyself.courseservice.domains.dtos;
 
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
 
 public class PracticeLessonDto extends LessonDto {
+    @NotBlank(message = "Please, enter [instruction] of lesson!")
     private String instruction;
 
     @Override

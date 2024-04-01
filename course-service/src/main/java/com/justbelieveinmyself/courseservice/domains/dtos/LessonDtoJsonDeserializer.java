@@ -9,7 +9,8 @@ import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 @JsonComponent
-public class LessonDtoDeserializer extends JsonDeserializer<LessonDto> {
+public class LessonDtoJsonDeserializer extends JsonDeserializer<LessonDto> {
+
     @Override
     public LessonDto deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         ObjectNode node = jsonParser.readValueAsTree();
@@ -23,4 +24,5 @@ public class LessonDtoDeserializer extends JsonDeserializer<LessonDto> {
         }
         throw new IllegalArgumentException("Unknown type of lesson in JSON: " + node);
     }
+
 }

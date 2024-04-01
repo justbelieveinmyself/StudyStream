@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "enrollments")
@@ -28,7 +28,7 @@ public class Enrollment {
     @JoinColumn(nullable = false, name = "course_id")
     private Course course;
     @CreationTimestamp
-    private ZonedDateTime enrollmentTime;
+    private Instant enrollmentTime;
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 }

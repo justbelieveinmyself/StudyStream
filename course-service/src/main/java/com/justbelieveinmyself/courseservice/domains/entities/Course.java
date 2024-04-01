@@ -10,10 +10,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -28,8 +27,7 @@ public class Course {
     private Long id;
     private String title;
     private String description;
-    @CreationTimestamp
-    private ZonedDateTime creationTime;
+    private Instant creationTime;
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "author_id")
     private User author;

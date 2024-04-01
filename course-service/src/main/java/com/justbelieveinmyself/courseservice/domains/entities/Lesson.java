@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "lessons")
@@ -27,8 +27,8 @@ public abstract class Lesson {
     @Column(nullable = false, name = "lesson_order")
     private Integer order;
     @CreationTimestamp
-    private ZonedDateTime creationTime;
-    private ZonedDateTime deadLine;
+    private Instant creationTime;
+    private Instant deadLine;
     @ManyToOne
     @JoinColumn(name = "module_id")
     private Module module;

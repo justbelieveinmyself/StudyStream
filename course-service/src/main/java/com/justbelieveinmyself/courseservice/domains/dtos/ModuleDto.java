@@ -6,12 +6,12 @@ import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.library.dto.Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.BeanUtils;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,9 +21,11 @@ import java.util.stream.Collectors;
 public class ModuleDto implements Dto<Module> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
+    @NotBlank(message = "Please, enter title of module!")
     private String title;
     private String description;
-    private ZonedDateTime creationTime;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private Instant creationTime;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long courseId;
     private List<LessonDto> lessons;
@@ -32,6 +34,7 @@ public class ModuleDto implements Dto<Module> {
     public ModuleDto fromEntity(Module entity) {
         ModuleDto moduleDto = new ModuleDto();
         BeanUtils.copyProperties(entity, moduleDto);
+
         if (entity.getLessons() != null) {
             moduleDto.setLessons(entity.getLessons().stream().map(lesson -> {
                 if (lesson instanceof PracticeLesson) {
@@ -50,27 +53,25 @@ public class ModuleDto implements Dto<Module> {
     }
 
     /**
-     * @return Module Entity without Author
+     * @return Module Entity without id, courseId, creationTime,
      */
     @Override
     public Module toEntity() {
         Module entity = new Module();
         BeanUtils.copyProperties(this, entity);
+
         List<Lesson> lessons = new ArrayList<>();
+
         for (LessonDto lessonDto : this.getLessons()) {
-            Lesson lesson;
-            if (lessonDto instanceof PracticeLessonDto) {
-                lesson = ((PracticeLessonDto) lessonDto).toEntity();
-            } else if (lessonDto instanceof TestLessonDto) {
-                lesson = ((TestLessonDto) lessonDto).toEntity();
-            } else {
-                throw new IllegalArgumentException("Unknown type of lesson: " + lessonDto.getClass().getSimpleName());
-            }
+            Lesson lesson = lessonDto.toEntity();
             lesson.setModule(entity);
             lessons.add(lesson);
         }
 
         entity.setLessons(lessons);
+
+        entity.setId(null);
+        entity.setCreationTime(null);
 
         return entity;
     }

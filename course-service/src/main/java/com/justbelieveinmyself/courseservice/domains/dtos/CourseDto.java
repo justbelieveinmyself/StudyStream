@@ -14,7 +14,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,23 +23,26 @@ import java.util.stream.Collectors;
 public class CourseDto implements Dto<Course> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-    @NotBlank(message = "Please, enter title!")
+    @NotBlank(message = "Please, enter title of course!")
     private String title;
     private String description;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private Instant creationTime;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long authorId;
-    @NotBlank(message = "Please, enter category!")
+    @NotBlank(message = "Please, enter category of course!")
     private String category;
-    @NotNull(message = "Please, enter difficulty! BEGINNER, INTERMEDIATE or ADVANCED")
+    @NotNull(message = "Please, enter difficulty of course! BEGINNER, INTERMEDIATE or ADVANCED")
     private CourseDifficulty difficulty;
-    @NotNull(message = "Please, enter duration in hours!")
-    @Min(value = 1, message = "Duration cannot be small than 1h!")
+    @NotNull(message = "Please, enter duration of course in hours!")
+    @Min(value = 1, message = "Duration of course cannot be small than 1h!")
     private Integer duration;
-    @NotNull(message = "Please, enter price!")
-    @Min(value = 0, message = "Price cannot be small than 0!")
+    @NotNull(message = "Please, enter price of course!")
+    @Min(value = 0, message = "Price of course cannot be small than 0!")
     private BigDecimal price;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Double rating;
-    @NotNull(message = "Please, enter status! ACTIVE or ARCHIVED")
+    @NotNull(message = "Please, enter status of course! ACTIVE or ARCHIVED")
     private CourseStatus status;
     private List<ModuleDto> modules;
 
@@ -55,7 +58,7 @@ public class CourseDto implements Dto<Course> {
     }
 
     /**
-     * @return Course Entity without Author
+     * @return Course Entity without id, authorId, rating, creationTime,
      */
     @Override
     public Course toEntity() {
@@ -66,6 +69,10 @@ public class CourseDto implements Dto<Course> {
             Module module = moduleDto.toEntity();
             course.addModule(module);
         }
+
+        course.setId(null);
+        course.setRating(null);
+        course.setCreationTime(null);
 
         return course;
     }

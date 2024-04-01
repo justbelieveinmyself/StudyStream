@@ -2,14 +2,13 @@ package com.justbelieveinmyself.courseservice.domains.dtos;
 
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
-import com.justbelieveinmyself.library.dto.Dto;
 import org.springframework.beans.BeanUtils;
 
-public class PracticeLessonDto extends LessonDto implements Dto<PracticeLesson> {
+public class PracticeLessonDto extends LessonDto {
     private String instruction;
 
     @Override
-    public PracticeLessonDto fromEntity(PracticeLesson entity) {
+    public PracticeLessonDto fromEntity(Lesson entity) {
         PracticeLessonDto dto = new PracticeLessonDto();
         BeanUtils.copyProperties(entity, dto);
         dto.setLessonType("PRACTICE");
@@ -20,13 +19,25 @@ public class PracticeLessonDto extends LessonDto implements Dto<PracticeLesson> 
     }
 
     /**
-     * @return PracticeLesson without Module
+     * @return PracticeLesson without moduleId, id, creationTime
      */
     @Override
     public PracticeLesson toEntity() {
         PracticeLesson entity = new PracticeLesson();
         BeanUtils.copyProperties(this, entity);
+
+        entity.setId(null);
+        entity.setCreationTime(null);
+
         return entity;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
 }

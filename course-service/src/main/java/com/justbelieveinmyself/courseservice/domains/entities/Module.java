@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class Module {
     private String title;
     private String description;
     @CreationTimestamp
-    private ZonedDateTime creationTime;
+    private Instant creationTime;
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "course_id")
     private Course course;

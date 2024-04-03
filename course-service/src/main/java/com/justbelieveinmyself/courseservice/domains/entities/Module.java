@@ -31,4 +31,9 @@ public class Module {
     private Course course;
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     private List<Lesson> lessons = new ArrayList<>();
+
+    public void addLesson(Lesson lesson) {
+        lesson.setModule(this);
+        this.lessons.add(lesson);
+    }
 }

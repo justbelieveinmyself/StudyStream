@@ -1,8 +1,8 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
-import com.justbelieveinmyself.courseservice.domains.entities.User;
 import com.justbelieveinmyself.courseservice.services.CourseService;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
@@ -67,6 +67,18 @@ public class CourseController {
             BindingResult result
     ) {
         CourseDto courseDto = courseService.updateCourseById(courseId, userId, updateCourseDto);
+        return ResponseEntity.ok(courseDto);
+    }
+
+    @Operation(summary = "Partial Update Course by ID", description = "Partial Update Course by ID")
+    @PatchMapping("/{courseId}")
+    public ResponseEntity<CourseDto> patchCourseById(
+            @PathVariable Long courseId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @RequestBody UpdateCourseDto updateCourseDto,
+            BindingResult result
+    ) {
+        CourseDto courseDto = courseService.patchCourseById(courseId, userId, updateCourseDto);
         return ResponseEntity.ok(courseDto);
     }
 

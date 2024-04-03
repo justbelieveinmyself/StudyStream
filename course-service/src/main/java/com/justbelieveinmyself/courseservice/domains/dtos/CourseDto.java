@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,10 +68,15 @@ public class CourseDto implements Dto<Course> {
         Course course = new Course();
         BeanUtils.copyProperties(this, course);
 
+        List<Module> modules = new ArrayList<>();
+
         for (ModuleDto moduleDto : this.getModules()) {
             Module module = moduleDto.toEntity();
-            course.addModule(module);
+            module.setCourse(course);
+            modules.add(module);
         }
+
+        course.setModules(modules);
 
         course.setId(null);
         course.setRating(null);

@@ -1,20 +1,23 @@
 package com.justbelieveinmyself.courseservice.services;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
+import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.User;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
-import com.justbelieveinmyself.courseservice.repositories.UserRepository;
-import com.justbelieveinmyself.library.exception.ForbiddenException;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,16 +57,63 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    @Transactional //TODO: think
     public CourseDto updateCourseById(Long courseId, Long authorUserId, UpdateCourseDto updateCourseDto) {
         Course course = findById(courseId);
 
         accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
 
         BeanUtils.copyProperties(updateCourseDto, course);
+        setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
 
-        Course updatedCourse = courseRepository.save(course);
-        return new CourseDto().fromEntity(updatedCourse);
+        Course savedCourse = courseRepository.save(course);
+        return new CourseDto().fromEntity(savedCourse);
+    }
+
+    public CourseDto patchCourseById(Long courseId, Long authorUserId, UpdateCourseDto updateCourseDto) {
+        Course course = findById(courseId);
+
+        accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
+
+        if (updateCourseDto.getTitle() != null) {
+            course.setTitle(updateCourseDto.getTitle());
+        }
+        if (updateCourseDto.getCategory() != null) {
+            course.setCategory(updateCourseDto.getCategory());
+        }
+        if (updateCourseDto.getDescription() != null) {
+            course.setDescription(updateCourseDto.getDescription());
+        }
+        if (updateCourseDto.getDuration() != null) {
+            course.setDuration(updateCourseDto.getDuration());
+        }
+        if (updateCourseDto.getPrice() != null) {
+            course.setPrice(updateCourseDto.getPrice());
+        }
+        if (updateCourseDto.getStatus() != null) {
+            course.setStatus(updateCourseDto.getStatus());
+        }
+        if (updateCourseDto.getDifficulty() != null) {
+            course.setDifficulty(updateCourseDto.getDifficulty());
+        }
+        setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
+
+        Course savedCourse = courseRepository.save(course);
+        return new CourseDto().fromEntity(savedCourse);
+    }
+
+    private void setModulesInCourseFromUpdateCourseDto(UpdateCourseDto updateCourseDto, Course course) {
+        if (updateCourseDto.getModules() != null) {
+
+            List<Module> modules = new ArrayList<>();
+
+            for (ModuleDto moduleDto : updateCourseDto.getModules()) {
+                Module module = moduleDto.toEntity();
+                module.setCourse(course);
+                modules.add(module);
+            }
+
+            course.setModules(modules);
+        }
     }
 
 }

@@ -77,4 +77,18 @@ public class ModuleController {
         return ResponseEntity.ok(moduleDto);
     }
 
+    @Operation(summary = "Partial Update Module by ID", description = "Partial Update Module by ID")
+    @PatchMapping("/{moduleId}")
+    @CheckModuleExistsInCourse
+    public ResponseEntity<ModuleDto> patchModuleById(
+            @PathVariable Long courseId,
+            @PathVariable Long moduleId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @RequestBody UpdateModuleDto updateModuleDto,
+            BindingResult result
+    ) {
+        ModuleDto moduleDto = moduleService.patchModuleById(courseId, moduleId, userId, updateModuleDto);
+        return ResponseEntity.ok(moduleDto);
+    }
+
 }

@@ -46,7 +46,7 @@ public class UserService {
             user.setLastName(dto.getLastName());
         }
         if (dto.getPhone() != null) {
-            user.setPhone(user.getPhone());
+            user.setPhone(dto.getPhone());
         }
         User savedUser = userRepository.save(user);
         return new UserDto().fromEntity(savedUser);

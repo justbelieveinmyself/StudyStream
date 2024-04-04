@@ -27,6 +27,7 @@ public class Course {
     private Long id;
     private String title;
     private String description;
+    @CreationTimestamp
     private Instant creationTime;
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "author_id")

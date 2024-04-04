@@ -11,16 +11,17 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class ModuleExistsAspect {
+public class LessonExistsAspect {
     private final CourseRepository courseRepository;
 
-    @Before("@annotation(com.justbelieveinmyself.courseservice.domains.annotations.CheckModuleExistsInCourse)")
-    public void checkModuleExistsInCourse(JoinPoint joinPoint) {
+    @Before("@annotation(com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModule)")
+    public void checkLessonExistsInModule(JoinPoint joinPoint) {
         Long courseId = Long.parseLong(joinPoint.getArgs()[0].toString());
         Long moduleId = Long.parseLong(joinPoint.getArgs()[1].toString());
+        Long lessonId = Long.parseLong(joinPoint.getArgs()[2].toString());
 
-        if (!courseRepository.existsByIdAndModulesId(courseId, moduleId)) {
-            throw new NotFoundException("Course with ID: " + courseId + " does not contain module with ID: " + moduleId);
+        if (!courseRepository.existsByIdAndModulesIdAndModulesLessonsId(courseId, moduleId, lessonId)) {
+            throw new NotFoundException("Course with ID: " + courseId + " does not contain module with ID: " + moduleId + " or module does not contain lesson with ID:" + lessonId);
         }
     }
 

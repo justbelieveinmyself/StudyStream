@@ -1,5 +1,6 @@
-package com.justbelieveinmyself.courseservice.domains.dtos;
+package com.justbelieveinmyself.courseservice.domains.dtos.update;
 
+import com.justbelieveinmyself.courseservice.domains.dtos.LessonDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

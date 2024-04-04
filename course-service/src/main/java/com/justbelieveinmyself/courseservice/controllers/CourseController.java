@@ -1,8 +1,7 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.services.CourseService;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;

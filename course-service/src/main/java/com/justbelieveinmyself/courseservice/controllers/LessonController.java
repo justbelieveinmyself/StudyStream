@@ -1,9 +1,8 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
+import com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModule;
 import com.justbelieveinmyself.courseservice.domains.annotations.CheckModuleExistsInCourse;
 import com.justbelieveinmyself.courseservice.domains.dtos.LessonDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateLessonDto;
 import com.justbelieveinmyself.courseservice.services.LessonService;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
@@ -29,7 +28,7 @@ public class LessonController { //TODO: controllers to interfaces?
 
     @Operation(summary = "Get Lesson by ID", description = "Get Lesson by ID")
     @GetMapping("/{lessonId}")
-    @CheckModuleExistsInCourse//TODO: check what lesson exists in module?
+    @CheckLessonExistsInModule
     public ResponseEntity<LessonDto> getLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -44,19 +43,19 @@ public class LessonController { //TODO: controllers to interfaces?
     @ValidateErrors
     @CheckModuleExistsInCourse
     public ResponseEntity<LessonDto> createNewLesson(
-            @RequestBody @Valid LessonDto lessonDto,
-            BindingResult result,
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
+            @RequestBody @Valid LessonDto lessonDto,
+            BindingResult result,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
     ) {
-        LessonDto savedLessonDto = lessonService.createNewLesson(lessonDto, courseId, userId);
+        LessonDto savedLessonDto = lessonService.createNewLesson(lessonDto, courseId, moduleId, userId);
         return new ResponseEntity<>(savedLessonDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete Lesson by ID", description = "Delete Lesson by ID")
     @DeleteMapping("{lessonId}")
-    @CheckModuleExistsInCourse
+    @CheckLessonExistsInModule
     public ResponseEntity<ResponseMessage> deleteLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -70,32 +69,32 @@ public class LessonController { //TODO: controllers to interfaces?
     @Operation(summary = "Update Lesson by ID", description = "Update Lesson by ID")
     @PutMapping("/{lessonId}")
     @ValidateErrors
-    @CheckModuleExistsInCourse
+    @CheckLessonExistsInModule
     public ResponseEntity<LessonDto> updateLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
             @PathVariable Long lessonId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
-            @RequestBody @Valid UpdateLessonDto updateLessonDto,
+            @RequestBody @Valid LessonDto lessonDto,
             BindingResult result
     ) {
-        LessonDto lessonDto = lessonService.updateLessonById(courseId, moduleId, userId, updateLessonDto);
-        return ResponseEntity.ok(lessonDto);
+        LessonDto lesson = lessonService.updateLessonById(courseId, lessonId, userId, lessonDto);
+        return ResponseEntity.ok(lesson);
     }
 
     @Operation(summary = "Partial Update Lesson by ID", description = "Partial Update Lesson by ID")
     @PatchMapping("/{lessonId}")
-    @CheckModuleExistsInCourse
-    public ResponseEntity<ModuleDto> patchLessonById(
+    @CheckLessonExistsInModule
+    public ResponseEntity<LessonDto> patchLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
             @PathVariable Long lessonId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
-            @RequestBody UpdateLessonDto updateLessonDto,
+            @RequestBody LessonDto lessonDto,
             BindingResult result
     ) {
-        ModuleDto moduleDto = lessonService.patchLessonById(courseId, moduleId, userId, updateLessonDto);
-        return ResponseEntity.ok(moduleDto);
+        LessonDto lesson = lessonService.patchLessonById(courseId, lessonId, userId, lessonDto);
+        return ResponseEntity.ok(lesson);
     }
 
 }

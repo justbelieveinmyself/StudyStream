@@ -2,7 +2,7 @@ package com.justbelieveinmyself.courseservice.services;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.LessonDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateModuleDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateModuleDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
@@ -47,11 +47,9 @@ public class ModuleService {
     }
 
     public void deleteModuleById(Long courseId, Long moduleId, Long userId) {
-        Module module = findById(moduleId);
-
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
 
-        moduleRepository.delete(module);
+        moduleRepository.deleteById(moduleId);
     }
 
     public ModuleDto updateModuleById(Long courseId, Long moduleId, Long userId, UpdateModuleDto updateModuleDto) {

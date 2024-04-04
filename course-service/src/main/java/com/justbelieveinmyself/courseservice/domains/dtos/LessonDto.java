@@ -1,6 +1,7 @@
 package com.justbelieveinmyself.courseservice.domains.dtos;
 
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
+import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.library.dto.Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ public abstract class LessonDto implements Dto<Lesson> {
     @NotBlank(message = "Please, enter [title] of lesson!")
     private String title;
     private String description;
-    @NotBlank(message = "Please, enter [order] of lesson!")
+    @NotNull(message = "Please, enter [order] of lesson!")
     private Integer order;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Instant creationTime;
@@ -28,6 +29,17 @@ public abstract class LessonDto implements Dto<Lesson> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long moduleId;
     @NotBlank(message = "Please, enter [lessonType]! ex. TEST or PRACTICE")
-    @Pattern(regexp = "(TEST|PRACTICE)}")
+    @Pattern(regexp = "(TEST|PRACTICE)")
     private String lessonType;
+
+    @Override
+    public abstract LessonDto fromEntity(Lesson entity);
+    public static LessonDto createLessonDto(Lesson lesson) {
+        if (lesson instanceof TestLesson) {
+            return new TestLessonDto().fromEntity(lesson);
+        } else {
+            return new PracticeLessonDto().fromEntity(lesson);
+        }
+    }
+
 }

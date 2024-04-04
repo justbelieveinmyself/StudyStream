@@ -48,15 +48,17 @@ public class TestLessonDto extends LessonDto {
         TestLesson entity = new TestLesson();
         BeanUtils.copyProperties(this, entity);
 
-        List<TestQuestion> questions = new ArrayList<>();
+        if (this.getQuestions() != null) {
+            List<TestQuestion> questions = new ArrayList<>();
 
-        for (TestQuestionDto questionDto : this.getQuestions()) {
-            TestQuestion question = questionDto.toEntity();
-            question.setLesson(entity);
-            questions.add(question);
+            for (TestQuestionDto questionDto : this.getQuestions()) {
+                TestQuestion question = questionDto.toEntity();
+                question.setLesson(entity);
+                questions.add(question);
+            }
+
+            entity.setQuestions(questions);
         }
-
-        entity.setQuestions(questions);
 
         entity.setId(null);
         entity.setCreationTime(null);

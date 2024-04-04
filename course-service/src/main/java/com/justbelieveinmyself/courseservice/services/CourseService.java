@@ -2,7 +2,7 @@ package com.justbelieveinmyself.courseservice.services;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.User;
@@ -11,11 +11,9 @@ import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,18 +41,15 @@ public class CourseService {
     public CourseDto createNewCourse(CourseDto courseDto, Long authorId) {
         User author = userService.findById(authorId);
         Course course = courseDto.toEntity();
-        course.setAuthor(author);
-        course.setCreationTime(Instant.now()); //TODO: post and get ?
-        Course savedCourse = courseRepository.save(course);
+        course.setAuthor(author); //TODO: CHECK CREATION TIME ON ENTITIES
+        Course savedCourse = courseRepository.saveAndFlush(course);
         return courseDto.fromEntity(savedCourse);
     }
 
     public void deleteCourseById(Long courseId, Long authorUserId) {
-        Course course = findById(courseId);
-
         accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
 
-        courseRepository.delete(course);
+        courseRepository.deleteById(courseId);
     }
 
     public CourseDto updateCourseById(Long courseId, Long authorUserId, UpdateCourseDto updateCourseDto) {

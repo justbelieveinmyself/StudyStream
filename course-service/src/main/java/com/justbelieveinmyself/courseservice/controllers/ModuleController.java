@@ -2,7 +2,7 @@ package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.annotations.CheckModuleExistsInCourse;
 import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateModuleDto;
+import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateModuleDto;
 import com.justbelieveinmyself.courseservice.services.ModuleService;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,5 +21,5 @@ import java.util.List;
 public class TestLesson extends Lesson {
     private Integer durationMinutes;
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
-    private List<TestQuestion> questions;
+    private List<TestQuestion> questions = new ArrayList<>();
 }

@@ -49,7 +49,7 @@ public class LessonService { //TODO: implement methods
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
         Lesson lessonDest = findById(lessonId);
         Lesson lessonSrc = lessonDto.toEntity();
-        if (!lessonDest.getClass().equals(lessonSrc.getClass())) {
+        /*if (!lessonDest.getClass().equals(lessonSrc.getClass())) { //TODO: switch classes for lesson on update?
             Lesson lessonTemp = lessonDest;
             if (lessonSrc instanceof PracticeLesson) {
                 lessonDest = new PracticeLesson();
@@ -57,12 +57,16 @@ public class LessonService { //TODO: implement methods
                 lessonDest = new TestLesson();
             }
             BeanUtils.copyProperties(lessonTemp, lessonDest);
-        }
-
+        }*/
         BeanUtils.copyProperties(lessonSrc, lessonDest, "creationTime", "id", "module");
-
+        if (lessonDest instanceof TestLesson) {
+            TestLesson testLesson = (TestLesson) lessonDest;
+            testLesson.getQuestions().forEach(question -> {
+                question.setLesson(lessonDest);
+            });
+        } //TODO: don't create new questions, replace old by id
         Lesson savedLesson = lessonRepository.save(lessonDest);
-        return LessonDto.createLessonDto(savedLesson); //TODO: FIX CREATING NEW ID
+        return LessonDto.createLessonDto(savedLesson);
     }
 
     public LessonDto patchLessonById(Long courseId, Long lessonId, Long userId, LessonDto lessonDto) {

@@ -20,6 +20,6 @@ import java.util.List;
 @Setter
 public class TestLesson extends Lesson {
     private Integer durationMinutes;
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestQuestion> questions = new ArrayList<>();
 }

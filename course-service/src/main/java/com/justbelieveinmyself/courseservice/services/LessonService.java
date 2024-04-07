@@ -1,10 +1,8 @@
 package com.justbelieveinmyself.courseservice.services;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.LessonDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateLessonDto;
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
-import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.LessonRepository;
@@ -12,6 +10,7 @@ import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +44,7 @@ public class LessonService { //TODO: implement methods
         lessonRepository.deleteById(lessonId);
     }
 
+    @Transactional
     public LessonDto updateLessonById(Long courseId, Long lessonId, Long userId, LessonDto lessonDto) {
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
         Lesson lessonDest = findById(lessonId);
@@ -58,22 +58,50 @@ public class LessonService { //TODO: implement methods
             }
             BeanUtils.copyProperties(lessonTemp, lessonDest);
         }*/
-        BeanUtils.copyProperties(lessonSrc, lessonDest, "creationTime", "id", "module");
+        BeanUtils.copyProperties(lessonSrc, lessonDest, "creationTime", "id", "module", "questions");
         if (lessonDest instanceof TestLesson) {
             TestLesson testLesson = (TestLesson) lessonDest;
-            testLesson.getQuestions().forEach(question -> {
-                question.setLesson(lessonDest);
-            });
-        } //TODO: don't create new questions, replace old by id
+            testLesson.getQuestions().clear();
+            if (lessonDto.getLessonType().equals("TEST")) {
+                TestLesson testLessonSrc = (TestLesson) lessonSrc;
+                testLessonSrc.getQuestions().forEach(testQuestion -> {
+                    testLesson.getQuestions().add(testQuestion);
+                    testQuestion.setLesson(testLesson);
+                });
+            }
+        }
         Lesson savedLesson = lessonRepository.save(lessonDest);
         return LessonDto.createLessonDto(savedLesson);
     }
 
+
     public LessonDto patchLessonById(Long courseId, Long lessonId, Long userId, LessonDto lessonDto) {
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
         Lesson lesson = findById(lessonId);
+
+
         //TODO: null checking and assign
         lessonRepository.save(lesson);
         return LessonDto.createLessonDto(lesson);
     }
+
+    private void updateLessonFields(LessonDto lessonDto, Lesson lesson) {
+        Lesson fromDto = lessonDto.toEntity();
+        //TODO: own copyproperites method with notnull values
+
+        if (lessonDto.getLessonType().equals("TEST") && lesson instanceof TestLesson) {
+            TestLesson testLesson = (TestLesson) lesson;
+            testLesson.getQuestions().clear();
+            TestLesson testLessonFromDto = (TestLesson) fromDto;
+
+            testLessonFromDto.getQuestions().forEach(testQuestion -> {
+                testLesson.getQuestions().add(testQuestion);
+                testQuestion.setLesson(testLesson);
+            });
+
+        }
+    }
+
 }
+//TODO: enrollment service with mail to subscriber
+//TODO: question service for testquestions? get post put patch....

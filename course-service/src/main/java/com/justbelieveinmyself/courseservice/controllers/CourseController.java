@@ -19,12 +19,12 @@ public interface CourseController {
 
     @Operation(summary = "Get Course by ID", description = "Get Course by ID")
     @GetMapping("/{courseId}")
-    public ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId);
+    ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId);
 
     @Operation(summary = "Create Course", description = "Create Course")
     @PostMapping
     @ValidateErrors
-    public ResponseEntity<CourseDto> createNewCourse(
+    ResponseEntity<CourseDto> createNewCourse(
             @RequestBody @Valid CourseDto courseDto,
             BindingResult result,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
@@ -32,7 +32,7 @@ public interface CourseController {
 
     @Operation(summary = "Delete Course by ID", description = "Delete Course by ID")
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<ResponseMessage> deleteCourseById(
+    ResponseEntity<ResponseMessage> deleteCourseById(
             @PathVariable Long courseId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
     );
@@ -40,7 +40,7 @@ public interface CourseController {
     @Operation(summary = "Update Course by ID", description = "Update Course by ID")
     @PutMapping("/{courseId}")
     @ValidateErrors
-    public ResponseEntity<CourseDto> updateCourseById(
+    ResponseEntity<CourseDto> updateCourseById(
             @PathVariable Long courseId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid UpdateCourseDto updateCourseDto,
@@ -49,7 +49,7 @@ public interface CourseController {
 
     @Operation(summary = "Partial Update Course by ID", description = "Partial Update Course by ID")
     @PatchMapping("/{courseId}")
-    public ResponseEntity<CourseDto> patchCourseById(
+    ResponseEntity<CourseDto> patchCourseById(
             @PathVariable Long courseId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestBody UpdateCourseDto updateCourseDto,

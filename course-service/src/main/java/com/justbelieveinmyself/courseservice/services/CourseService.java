@@ -41,7 +41,7 @@ public class CourseService {
     public CourseDto createNewCourse(CourseDto courseDto, Long authorId) {
         User author = userService.findById(authorId);
         Course course = courseDto.toEntity();
-        course.setAuthor(author); //TODO: CHECK CREATION TIME ON ENTITIES
+        course.setAuthor(author);
         Course savedCourse = courseRepository.saveAndFlush(course);
         return courseDto.fromEntity(savedCourse);
     }
@@ -69,6 +69,14 @@ public class CourseService {
 
         accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
 
+        updateCourseFields(updateCourseDto, course);
+
+        Course savedCourse = courseRepository.save(course);
+        return new CourseDto().fromEntity(savedCourse);
+    }
+
+    private void updateCourseFields(UpdateCourseDto updateCourseDto, Course course) {
+        //TODO: mapstruct?
         if (updateCourseDto.getTitle() != null) {
             course.setTitle(updateCourseDto.getTitle());
         }
@@ -91,9 +99,6 @@ public class CourseService {
             course.setDifficulty(updateCourseDto.getDifficulty());
         }
         setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
-
-        Course savedCourse = courseRepository.save(course);
-        return new CourseDto().fromEntity(savedCourse);
     }
 
     private void setModulesInCourseFromUpdateCourseDto(UpdateCourseDto updateCourseDto, Course course) {

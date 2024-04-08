@@ -3,10 +3,10 @@ package com.justbelieveinmyself.courseservice.domains.dtos;
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestQuestion;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class TestLessonDto extends LessonDto {
         TestLesson specifiedEntity = (TestLesson) entity;
         TestLessonDto dto = new TestLessonDto();
 
-        BeanUtils.copyProperties(entity, dto);
+        ModelUtils.copyProperties(entity, dto);
         dto.setLessonType("TEST");
 
         if (entity.getModule() != null) {
@@ -46,7 +46,7 @@ public class TestLessonDto extends LessonDto {
     @Override
     public TestLesson toEntity() {
         TestLesson entity = new TestLesson();
-        BeanUtils.copyProperties(this, entity);
+        ModelUtils.copyProperties(this, entity);
 
         if (this.getQuestions() != null) {
             List<TestQuestion> questions = new ArrayList<>();

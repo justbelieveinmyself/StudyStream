@@ -8,6 +8,7 @@ import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.User;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -69,36 +70,11 @@ public class CourseService {
 
         accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
 
-        updateCourseFields(updateCourseDto, course);
+        ModelUtils.copyPropertiesIgnoreNull(updateCourseDto, course);
+        setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
 
         Course savedCourse = courseRepository.save(course);
         return new CourseDto().fromEntity(savedCourse);
-    }
-
-    private void updateCourseFields(UpdateCourseDto updateCourseDto, Course course) {
-        //TODO: mapstruct?
-        if (updateCourseDto.getTitle() != null) {
-            course.setTitle(updateCourseDto.getTitle());
-        }
-        if (updateCourseDto.getCategory() != null) {
-            course.setCategory(updateCourseDto.getCategory());
-        }
-        if (updateCourseDto.getDescription() != null) {
-            course.setDescription(updateCourseDto.getDescription());
-        }
-        if (updateCourseDto.getDuration() != null) {
-            course.setDuration(updateCourseDto.getDuration());
-        }
-        if (updateCourseDto.getPrice() != null) {
-            course.setPrice(updateCourseDto.getPrice());
-        }
-        if (updateCourseDto.getStatus() != null) {
-            course.setStatus(updateCourseDto.getStatus());
-        }
-        if (updateCourseDto.getDifficulty() != null) {
-            course.setDifficulty(updateCourseDto.getDifficulty());
-        }
-        setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
     }
 
     private void setModulesInCourseFromUpdateCourseDto(UpdateCourseDto updateCourseDto, Course course) {

@@ -5,11 +5,11 @@ import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.library.dto.Dto;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ModuleDto implements Dto<Module> {
     @Override
     public ModuleDto fromEntity(Module entity) {
         ModuleDto moduleDto = new ModuleDto();
-        BeanUtils.copyProperties(entity, moduleDto);
+        ModelUtils.copyProperties(entity, moduleDto);
 
         if (entity.getLessons() != null) {
             moduleDto.setLessons(entity.getLessons().stream().map(lesson -> {
@@ -60,7 +60,7 @@ public class ModuleDto implements Dto<Module> {
     @Override
     public Module toEntity() {
         Module entity = new Module();
-        BeanUtils.copyProperties(this, entity);
+        ModelUtils.copyProperties(this, entity);
 
         List<Lesson> lessons = new ArrayList<>();
 

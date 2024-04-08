@@ -6,9 +6,9 @@ import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.TestLesson;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.LessonRepository;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +58,7 @@ public class LessonService { //TODO: implement methods
             }
             BeanUtils.copyProperties(lessonTemp, lessonDest);
         }*/
-        BeanUtils.copyProperties(lessonSrc, lessonDest, "creationTime", "id", "module", "questions");
+        ModelUtils.copyProperties(lessonSrc, lessonDest, "creationTime", "id", "module", "questions");
         if (lessonDest instanceof TestLesson) {
             TestLesson testLesson = (TestLesson) lessonDest;
             testLesson.getQuestions().clear();
@@ -87,7 +87,8 @@ public class LessonService { //TODO: implement methods
 
     private void updateLessonFields(LessonDto lessonDto, Lesson lesson) {
         Lesson fromDto = lessonDto.toEntity();
-        //TODO: own copyproperites method with notnull values
+
+        ModelUtils.copyPropertiesIgnoreNull(lessonDto, lesson);
 
         if (lessonDto.getLessonType().equals("TEST") && lesson instanceof TestLesson) {
             TestLesson testLesson = (TestLesson) lesson;
@@ -105,3 +106,4 @@ public class LessonService { //TODO: implement methods
 }
 //TODO: enrollment service with mail to subscriber
 //TODO: question service for testquestions? get post put patch....
+//TODO: object storage for images/videos etc..

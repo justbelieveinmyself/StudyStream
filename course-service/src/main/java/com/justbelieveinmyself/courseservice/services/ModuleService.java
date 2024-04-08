@@ -8,9 +8,9 @@ import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.ModuleRepository;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class ModuleService {
 
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
 
-        BeanUtils.copyProperties(updateModuleDto, module);
+        ModelUtils.copyProperties(updateModuleDto, module);
         setLessonsInModuleFromUpdateModuleDto(updateModuleDto, module);
         Module savedModule = moduleRepository.save(module);
 

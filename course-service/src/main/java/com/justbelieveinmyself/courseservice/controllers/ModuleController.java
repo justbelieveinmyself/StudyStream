@@ -18,7 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/course/{courseId}/module")
+@RequestMapping("/api/v1/courses/{courseId}/modules")
 @CrossOrigin
 @RequiredArgsConstructor
 @Tag(name = "Module API", description = "Create, get, update and delete modules")

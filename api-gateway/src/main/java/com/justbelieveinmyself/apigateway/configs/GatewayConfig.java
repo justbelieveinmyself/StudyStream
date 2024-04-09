@@ -26,7 +26,7 @@ public class GatewayConfig {
                 .route("user-service", r -> r.path("/api/v1/user/**", "/api/v1/user")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://user-service"))
-                .route("course-service", r -> r.path("/api/v1/course/**", "/api/v1/course")
+                .route("course-service", r -> r.path("/api/v1/courses/**", "/api/v1/courses")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://course-service"))
                 .route("swagger-redirect", r -> r.path("/v3/api-docs/**")

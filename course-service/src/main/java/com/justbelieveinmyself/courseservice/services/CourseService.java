@@ -6,17 +6,22 @@ import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto
 import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.entities.Module;
 import com.justbelieveinmyself.courseservice.domains.entities.User;
+import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.helpers.AccessHelper;
 import com.justbelieveinmyself.courseservice.repositories.CourseRepository;
+import com.justbelieveinmyself.courseservice.repositories.specifications.CourseSpecifications;
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +41,27 @@ public class CourseService {
     public CourseDto getCourseById(Long courseId) {
         Course course = findById(courseId);
         return new CourseDto().fromEntity(course);
+    }
+
+    public Page<CourseDto> getCourses(String title, CourseDifficulty difficulty, Double price, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Specification specification = Specification.where(null);
+        if (title != null) {
+            specification = Specification
+                    .where(CourseSpecifications.hasTitle(title));
+        }
+        if (difficulty != null) {
+            specification = specification.and(CourseSpecifications.withDifficulty(difficulty));
+        }
+        if (price != null) {
+            specification = specification.and(CourseSpecifications.cheaperThan(price));
+        }
+        Page<Course> pageOfCourse = courseRepository.findAll(specification, pageable);
+        List<CourseDto> courseDtos = pageOfCourse.getContent()
+                .stream()
+                .map(course -> new CourseDto().fromEntity(course))
+                .collect(Collectors.toList());
+        return new PageImpl<>(courseDtos, pageable, pageOfCourse.getTotalElements());
     }
 
     @Transactional

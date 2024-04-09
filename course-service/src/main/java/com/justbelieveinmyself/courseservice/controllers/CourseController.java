@@ -2,6 +2,7 @@ package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,13 +10,26 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Course API", description = "Create, get, update and delete courses")
 @SecurityRequirement(name = "Bearer Authentication")
 public interface CourseController {
+
+    @Operation(summary = "Get Courses", description = "Get Courses")
+    @GetMapping
+    ResponseEntity<Page<CourseDto>> getCourses(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) CourseDifficulty difficulty,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "5") int pageSize
+    );
 
     @Operation(summary = "Get Course by ID", description = "Get Course by ID")
     @GetMapping("/{courseId}")

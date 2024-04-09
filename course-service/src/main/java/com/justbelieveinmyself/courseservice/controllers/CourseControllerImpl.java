@@ -2,9 +2,11 @@ package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
 import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.services.CourseService;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,11 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/course")
+@RequestMapping("/api/v1/courses")
 @CrossOrigin
 @RequiredArgsConstructor
 public class CourseControllerImpl implements CourseController {
     private final CourseService courseService;
+
+    @Override
+    public ResponseEntity<Page<CourseDto>> getCourses(String title, CourseDifficulty difficulty, Double price, int pageNumber, int pageSize) {
+        Page<CourseDto> courses = courseService.getCourses(title, difficulty, price, pageNumber, pageSize);
+        return ResponseEntity.ok(courses);
+    }
 
     @Override
     public ResponseEntity<CourseDto> getCourseById(Long courseId) {

@@ -45,7 +45,7 @@ public class CourseService {
 
     public Page<CourseDto> getCourses(String title, CourseDifficulty difficulty, Double price, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Specification specification = Specification.where(null);
+        Specification<Course> specification = Specification.where(null);
         if (title != null) {
             specification = Specification
                     .where(CourseSpecifications.hasTitle(title));

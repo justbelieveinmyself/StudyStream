@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class LessonService { //TODO: implement methods
+public class LessonService {
     private final LessonRepository lessonRepository;
     private final ModuleService moduleService;
     private final AccessHelper accessHelper;

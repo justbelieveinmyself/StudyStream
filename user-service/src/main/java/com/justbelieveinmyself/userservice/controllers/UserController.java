@@ -2,6 +2,8 @@ package com.justbelieveinmyself.userservice.controllers;
 
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
+import com.justbelieveinmyself.library.exception.ForbiddenException;
+import com.justbelieveinmyself.userservice.domains.annotations.RequiresRoleOrSelf;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/v1/user")
@@ -42,6 +46,18 @@ public class UserController {
     ) {
         UserDto responseDto = userService.updateUserById(userId, requestDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @Operation(summary = "Delete User by ID", description = "Delete User by ID")
+    @DeleteMapping("/{userId}")
+    @RequiresRoleOrSelf(roles = "ADMIN")
+    public ResponseEntity<ResponseMessage> deleteUserById(
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
+            @PathVariable Long userId
+    ) {
+        userService.deleteUserById(userId);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Get Current User", description = "Get Current User by Authentication")
@@ -83,5 +99,7 @@ public class UserController {
     }
 
 }
+//TODO: one controller for current user, another for list and by id
+//TODO: admin
 
 // @RequestHeader("X-Username") String username, @RequestHeader("X-User-Roles") String[] roles

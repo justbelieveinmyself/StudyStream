@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-source-infos>
+      <data-source-info id="" persistence-unit-name="Default" />
+      <data-source-info id="63a63653-b323-4a4b-a016-f3571b9e6c9f" persistence-unit-name="authservice" />
+      <data-source-info id="94f41ff5-31a6-4ae6-ad5a-6dc042667aee" persistence-unit-name="userservice" />
+      <data-source-info id="83f4dd57-f1c6-4ef3-bd1a-8eafb77652f2" persistence-unit-name="courseservice" />
+    </data-source-infos>
+  </component>
+</project>

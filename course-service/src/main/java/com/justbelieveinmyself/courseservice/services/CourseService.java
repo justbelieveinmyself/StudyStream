@@ -56,7 +56,9 @@ public class CourseService {
         if (price != null) {
             specification = specification.and(CourseSpecifications.cheaperThan(price));
         }
+
         Page<Course> pageOfCourse = courseRepository.findAll(specification, pageable);
+
         List<CourseDto> courseDtos = pageOfCourse.getContent()
                 .stream()
                 .map(course -> new CourseDto().fromEntity(course))

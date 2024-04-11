@@ -21,7 +21,6 @@ import java.util.List;
 public class ModuleService {
     private final ModuleRepository moduleRepository;
     private final CourseService courseService;
-    private final UserService userService;
     private final AccessHelper accessHelper;
 
     public Module findById(Long moduleId) {
@@ -69,15 +68,10 @@ public class ModuleService {
 
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
 
-        if (updateModuleDto.getTitle() != null) {
-            module.setTitle(updateModuleDto.getTitle());
-        }
-        if (updateModuleDto.getDescription() != null) {
-            module.setDescription(updateModuleDto.getDescription());
-        }
+        ModelUtils.copyPropertiesIgnoreNull(updateModuleDto, module);
         setLessonsInModuleFromUpdateModuleDto(updateModuleDto, module);
-        Module savedModule = moduleRepository.save(module);
 
+        Module savedModule = moduleRepository.save(module);
         return new ModuleDto().fromEntity(savedModule);
     }
 

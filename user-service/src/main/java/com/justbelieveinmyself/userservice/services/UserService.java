@@ -1,13 +1,17 @@
 package com.justbelieveinmyself.userservice.services;
 
+import com.justbelieveinmyself.library.dto.ModelUtils;
+import com.justbelieveinmyself.library.exception.NotFoundException;
 import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.domains.entities.User;
-import com.justbelieveinmyself.userservice.domains.exceptions.UserNotFoundException;
 import com.justbelieveinmyself.userservice.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +29,9 @@ public class UserService {
 
     public UserDto updateUserById(Long userId, UpdateUserDto dto) {
         User user = findById(userId);
-        user.setFirstName(dto.getFirstName()); // id, username - cannot change; email - by patch with verification; roles - by user with authorities
-        user.setLastName(dto.getLastName());
-        user.setPhone(dto.getPhone());
+
+        ModelUtils.copyProperties(dto, user);
+
         User savedUser = userRepository.save(user);
         return new UserDto().fromEntity(savedUser);
     }
@@ -39,21 +43,15 @@ public class UserService {
 
     public UserDto patchUserById(Long userId, UpdateUserDto dto) {
         User user = findById(userId);
-        if (dto.getFirstName() != null) {
-            user.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            user.setLastName(dto.getLastName());
-        }
-        if (dto.getPhone() != null) {
-            user.setPhone(dto.getPhone());
-        }
+
+        ModelUtils.copyPropertiesIgnoreNull(dto, user);
+
         User savedUser = userRepository.save(user);
         return new UserDto().fromEntity(savedUser);
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with UserID: " + id));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found with UserID: " + id));
     }
 
     public void updateEmail(EmailUpdateDto emailUpdateDto) {
@@ -61,5 +59,12 @@ public class UserService {
         user.setEmail(emailUpdateDto.getEmail());
         userRepository.save(user);
     }
+
+    public List<UserDto> getUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtoList = users.stream().map((user) -> new UserDto().fromEntity(user)).collect(Collectors.toList());
+        return userDtoList;
+    }
+
 }
 

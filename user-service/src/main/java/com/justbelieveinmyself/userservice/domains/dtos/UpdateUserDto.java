@@ -17,5 +17,4 @@ public class UpdateUserDto {
     @NotBlank(message = "Please, enter your phone!")
     @Pattern(regexp = "\\+\\d{11}", message = "Invalid phone format! ex. +7978009324.")
     private String phone;
-    //other details
 }

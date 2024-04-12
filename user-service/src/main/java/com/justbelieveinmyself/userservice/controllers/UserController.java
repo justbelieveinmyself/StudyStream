@@ -2,7 +2,7 @@ package com.justbelieveinmyself.userservice.controllers;
 
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
-import com.justbelieveinmyself.userservice.domains.annotations.RequiresRoleOrSelf;
+import com.justbelieveinmyself.library.aspects.RequiresRoleOrSelf;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
@@ -46,8 +46,8 @@ public class UserController {
     @ValidateErrors
     @RequiresRoleOrSelf(roles = "ADMIN")
     public ResponseEntity<UserDto> updateUserById(
-            @RequestHeader("X-User-Id") Long currentUserId,
-            @RequestHeader("X-User-Roles") String[] currentUserRoles,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
             @PathVariable Long userId,
             @RequestBody @Valid UpdateUserDto requestDto,
             BindingResult result
@@ -82,5 +82,3 @@ public class UserController {
     }
 
 }
-
-// @RequestHeader("X-Username") String username, @RequestHeader("X-User-Roles") String[] roles

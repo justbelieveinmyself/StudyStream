@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.userservice.domains.annotations;
+package com.justbelieveinmyself.library.aspects;
 
 import com.justbelieveinmyself.library.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RequiresRoleOrSelfAspect {
 
-    @Before("@annotation(com.justbelieveinmyself.userservice.domains.annotations.RequiresRoleOrSelf)")
+    @Before("@annotation(com.justbelieveinmyself.library.aspects.RequiresRoleOrSelf)")
     public void checkAccess(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         RequiresRoleOrSelf annotation = signature.getMethod().getAnnotation(RequiresRoleOrSelf.class);

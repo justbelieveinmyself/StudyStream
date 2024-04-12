@@ -5,6 +5,8 @@ import com.justbelieveinmyself.courseservice.repositories.EnrollmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EnrollmentService {
@@ -16,5 +18,9 @@ public class EnrollmentService {
 
     public void dropFromCourse(Long courseId, Long userId) {
 
+    }
+
+    public List<EnrollmentDto> getAllUsersOnCourse(Long courseId) {
+        return null;
     }
 }

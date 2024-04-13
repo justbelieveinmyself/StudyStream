@@ -2,7 +2,7 @@ package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.EnrollmentDto;
 import com.justbelieveinmyself.courseservice.services.EnrollmentService;
-import com.justbelieveinmyself.library.aspects.RequiresRoleOrSelf;
+import com.justbelieveinmyself.library.aspects.RequiresSelfOrRoles;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/courses/{courseId}/enrollments/users")
@@ -46,7 +47,7 @@ public class EnrollmentController {
 
     @Operation(summary = "Enroll User by ID", description = "This method allows enrolling a user in a specific course by their user ID")
     @PostMapping("/{userId}")
-    @RequiresRoleOrSelf(roles = "ADMIN")
+    @RequiresSelfOrRoles(roles = "ADMIN")
     public ResponseEntity<EnrollmentDto> enrollUserById(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
             @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
@@ -59,7 +60,7 @@ public class EnrollmentController {
 
     @Operation(summary = "Withdraw User by ID", description = "This method allows withdrawing a user from a specific course by their user ID")
     @DeleteMapping("/{userId}")
-    @RequiresRoleOrSelf(roles = "ADMIN")
+    @RequiresSelfOrRoles(roles = "ADMIN")
     public ResponseEntity<ResponseMessage> withdrawUserById(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
             @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
@@ -72,8 +73,8 @@ public class EnrollmentController {
 
     @Operation(summary = "Get All Users on Course", description = "This method retrieves a list of all users enrolled in a specific course")
     @GetMapping
-    public ResponseEntity<List<EnrollmentDto>> getAllUsersOnCourse(@PathVariable Long courseId) {
-        List<EnrollmentDto> responseDto = enrollmentService.getAllUsersOnCourse(courseId);
+    public ResponseEntity<Map<Long, List<Long>>> getAllUsersOnCourse(@PathVariable Long courseId) {
+        Map<Long, List<Long>> responseDto = enrollmentService.getAllUsersOnCourse(courseId);
         return ResponseEntity.ok(responseDto);
     }
 

@@ -40,7 +40,7 @@ public class LessonService {
     }
 
     public void deleteLessonById(Long courseId, Long lessonId, Long userId) {
-        accessHelper.checkUserHasAccessToCourse(courseId, userId);
+        accessHelper.checkUserHasAccessToCourse(courseId, userId); //TODO: to aspect with annotation?
         lessonRepository.deleteById(lessonId);
     }
 
@@ -74,33 +74,14 @@ public class LessonService {
         return LessonDto.createLessonDto(savedLesson);
     }
 
-
     public LessonDto patchLessonById(Long courseId, Long lessonId, Long userId, LessonDto lessonDto) {
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
         Lesson lesson = findById(lessonId);
 
-
-        //TODO: null checking and assign
-        lessonRepository.save(lesson);
-        return LessonDto.createLessonDto(lesson);
-    }
-
-    private void updateLessonFields(LessonDto lessonDto, Lesson lesson) {
-        Lesson fromDto = lessonDto.toEntity();
-
         ModelUtils.copyPropertiesIgnoreNull(lessonDto, lesson);
 
-        if (lessonDto.getLessonType().equals("TEST") && lesson instanceof TestLesson) {
-            TestLesson testLesson = (TestLesson) lesson;
-            testLesson.getQuestions().clear();
-            TestLesson testLessonFromDto = (TestLesson) fromDto;
-
-            testLessonFromDto.getQuestions().forEach(testQuestion -> {
-                testLesson.getQuestions().add(testQuestion);
-                testQuestion.setLesson(testLesson);
-            });
-
-        }
+        lessonRepository.save(lesson);
+        return LessonDto.createLessonDto(lesson);
     }
 
 }

@@ -2,7 +2,7 @@ package com.justbelieveinmyself.userservice.controllers;
 
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
-import com.justbelieveinmyself.library.aspects.RequiresRoleOrSelf;
+import com.justbelieveinmyself.library.aspects.RequiresSelfOrRoles;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
@@ -44,7 +44,7 @@ public class UserController {
     @Operation(summary = "Update User by ID", description = "Update User by ID")
     @PutMapping("/{userId}")
     @ValidateErrors
-    @RequiresRoleOrSelf(roles = "ADMIN")
+    @RequiresSelfOrRoles(roles = "ADMIN")
     public ResponseEntity<UserDto> updateUserById(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
             @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
@@ -58,7 +58,7 @@ public class UserController {
 
     @Operation(summary = "Partial Update User by ID", description = "Partial Update User by ID")
     @PatchMapping("/{userId}")
-    @RequiresRoleOrSelf(roles = "ADMIN")
+    @RequiresSelfOrRoles(roles = "ADMIN")
     public ResponseEntity<UserDto> patchUserById(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
             @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,
@@ -71,7 +71,7 @@ public class UserController {
 
     @Operation(summary = "Delete User by ID", description = "Delete User by ID")
     @DeleteMapping("/{userId}")
-    @RequiresRoleOrSelf(roles = "ADMIN")
+    @RequiresSelfOrRoles(roles = "ADMIN")
     public ResponseEntity<ResponseMessage> deleteUserById(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long currentUserId,
             @Parameter(hidden = true) @RequestHeader("X-User-Roles") String[] currentUserRoles,

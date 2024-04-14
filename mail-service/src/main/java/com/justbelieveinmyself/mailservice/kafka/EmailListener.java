@@ -12,7 +12,7 @@ public class EmailListener {
     private final EmailService emailService;
 
     @KafkaListener(topics = "user-email-verify-topic", groupId = "group-id")
-    public void verifyEmail(EmailVerificationDto emailVerificationDto) {
+    public void emailVerificationListener(EmailVerificationDto emailVerificationDto) {
         System.out.println("Verify email: " + emailVerificationDto.getEmail());
         emailService.sendVerification(emailVerificationDto);
     }

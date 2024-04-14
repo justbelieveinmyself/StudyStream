@@ -5,6 +5,8 @@ import com.justbelieveinmyself.courseservice.domains.entities.Course;
 import com.justbelieveinmyself.courseservice.domains.entities.Enrollment;
 import com.justbelieveinmyself.courseservice.domains.enums.EnrollmentStatus;
 import com.justbelieveinmyself.courseservice.repositories.EnrollmentRepository;
+import com.justbelieveinmyself.library.dto.EnrollmentEvent;
+import com.justbelieveinmyself.library.dto.EnrollmentEventType;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final CourseService courseService;
     private final UserService userService;
+    private final MailService mailService;
 
     public EnrollmentDto enrollToCourse(Long courseId, Long userId) {
         Enrollment enrollment = new Enrollment();
@@ -30,13 +33,18 @@ public class EnrollmentService {
         enrollment.setUser(userService.findById(userId));
 
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseId, EnrollmentEventType.ENROLLMENT));
+
         return new EnrollmentDto().fromEntity(savedEnrollment);
     }
 
     public void dropFromCourse(Long courseId, Long userId) {
         Enrollment enrollment = enrollmentRepository.findByCourse_IdAndUser_Id(courseId, userId)
                 .orElseThrow(() -> new NotFoundException("User with ID: " + userId + " is not enrolled in a course with ID: " + courseId));
+
         enrollmentRepository.delete(enrollment);
+
+        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseId, EnrollmentEventType.DROP));
     }
 
     public Map<Long, List<Long>> getAllUsersOnCourse(Long courseId) {

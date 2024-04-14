@@ -34,9 +34,10 @@ public class ModuleService {
     }
 
     public ModuleDto createNewModule(ModuleDto moduleDto, Long courseId, Long userId) {
+        accessHelper.checkUserHasAccessToCourse(courseId, userId);
+
         Course course = courseService.findById(courseId);
 
-        accessHelper.checkUserHasAccessToCourse(courseId, userId);
 
         Module module = moduleDto.toEntity();
         module.setCourse(course);
@@ -52,9 +53,9 @@ public class ModuleService {
     }
 
     public ModuleDto updateModuleById(Long courseId, Long moduleId, Long userId, UpdateModuleDto updateModuleDto) {
-        Module module = findById(moduleId);
-
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
+
+        Module module = findById(moduleId);
 
         ModelUtils.copyProperties(updateModuleDto, module);
         setLessonsInModuleFromUpdateModuleDto(updateModuleDto, module);
@@ -64,9 +65,9 @@ public class ModuleService {
     }
 
     public ModuleDto patchModuleById(Long courseId, Long moduleId, Long userId, UpdateModuleDto updateModuleDto) {
-        Module module = findById(moduleId);
-
         accessHelper.checkUserHasAccessToCourse(courseId, userId);
+
+        Module module = findById(moduleId);
 
         ModelUtils.copyPropertiesIgnoreNull(updateModuleDto, module);
         setLessonsInModuleFromUpdateModuleDto(updateModuleDto, module);

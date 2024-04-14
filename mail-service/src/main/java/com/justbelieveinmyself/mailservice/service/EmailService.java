@@ -1,5 +1,6 @@
 package com.justbelieveinmyself.mailservice.service;
 
+import com.justbelieveinmyself.library.dto.EnrollmentEvent;
 import com.justbelieveinmyself.mailservice.dto.EmailVerificationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,5 +41,12 @@ public class EmailService {
         mailMessage.setText(message);
 
         sender.send(mailMessage);
+    }
+
+    public void sendEnrollment(EnrollmentEvent enrollmentEvent) {
+    }//TODO: mail? store in emailservice all emails? and find by userId? +
+
+    public void sendDrop(EnrollmentEvent enrollmentEvent) {
+
     }
 }

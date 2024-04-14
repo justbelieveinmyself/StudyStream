@@ -44,7 +44,7 @@ public class EmailService {
         emailUpdateKafkaTemplate.send("user-email-update-topic", emailUpdateDto);
     }
 
-    public void verifyEmail(String activationCode) {
+    public void verifyEmail(String activationCode) { //TODO: exception
         User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new NotFoundException("Activation code not found or already used!"));
         user.setActivationCode(null);
         userRepository.save(user);

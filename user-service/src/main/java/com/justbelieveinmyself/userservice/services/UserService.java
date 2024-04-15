@@ -1,8 +1,8 @@
 package com.justbelieveinmyself.userservice.services;
 
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
-import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.domains.entities.User;

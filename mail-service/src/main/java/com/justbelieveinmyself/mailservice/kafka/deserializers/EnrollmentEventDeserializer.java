@@ -1,8 +1,7 @@
-package com.justbelieveinmyself.mailservice.kafka;
+package com.justbelieveinmyself.mailservice.kafka.deserializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justbelieveinmyself.library.dto.EnrollmentEvent;
-import com.justbelieveinmyself.mailservice.dto.EmailVerificationDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 

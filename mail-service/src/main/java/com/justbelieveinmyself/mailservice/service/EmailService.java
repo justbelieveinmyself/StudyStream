@@ -1,7 +1,9 @@
 package com.justbelieveinmyself.mailservice.service;
 
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.EnrollmentEvent;
-import com.justbelieveinmyself.mailservice.dto.EmailVerificationDto;
+import com.justbelieveinmyself.mailservice.domains.dto.EmailVerificationDto;
+import com.justbelieveinmyself.mailservice.domains.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,6 +18,7 @@ public class EmailService {
     private String producerUsername;
     @Value("${site.hostname}")
     private String hostname;
+    private final UserService userService;
 
 
     public void sendVerification(EmailVerificationDto emailVerificationDto) {
@@ -44,9 +47,17 @@ public class EmailService {
     }
 
     public void sendEnrollment(EnrollmentEvent enrollmentEvent) {
-    }//TODO: mail? store in emailservice all emails? and find by userId? +
+        User user = userService.findById(enrollmentEvent.getUserId());
+        String email = user.getEmail();
+
+    } //TODO: implement
 
     public void sendDrop(EnrollmentEvent enrollmentEvent) {
 
     }
+
+    public void updateEmail(EmailUpdateDto emailUpdateDto) {
+
+    }
+
 }

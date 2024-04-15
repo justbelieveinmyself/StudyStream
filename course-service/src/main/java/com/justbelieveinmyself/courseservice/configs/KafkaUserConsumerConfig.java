@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.courseservice.configs;
 
-import com.justbelieveinmyself.courseservice.domains.dtos.UserDto;
+import com.justbelieveinmyself.library.dto.UserDto;
 import com.justbelieveinmyself.courseservice.kafka.UserDtoDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

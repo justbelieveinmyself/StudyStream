@@ -1,11 +1,11 @@
 package com.justbelieveinmyself.authservice.configs;
 
-import com.justbelieveinmyself.authservice.domains.dtos.EmailUpdateDto;
-import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.authservice.kafka.EmailUpdateDtoSerializer;
 import com.justbelieveinmyself.authservice.kafka.EmailVerificationDtoSerializer;
 import com.justbelieveinmyself.authservice.kafka.UserDtoSerializer;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
+import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

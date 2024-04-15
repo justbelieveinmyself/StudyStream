@@ -2,7 +2,7 @@ package com.justbelieveinmyself.authservice.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.justbelieveinmyself.authservice.domains.dtos.EmailUpdateDto;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 

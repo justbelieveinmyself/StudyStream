@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.courseservice.domains.dtos;
+package com.justbelieveinmyself.library.dto;
 
 import com.justbelieveinmyself.library.enums.Role;
 import lombok.Getter;

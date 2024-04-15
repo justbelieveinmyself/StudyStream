@@ -1,7 +1,7 @@
-package com.justbelieveinmyself.courseservice.kafka;
+package com.justbelieveinmyself.mailservice.kafka;
 
-import com.justbelieveinmyself.courseservice.services.UserService;
 import com.justbelieveinmyself.library.dto.UserDto;
+import com.justbelieveinmyself.mailservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

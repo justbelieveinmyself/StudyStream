@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.userservice.kafka;
 
-import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;

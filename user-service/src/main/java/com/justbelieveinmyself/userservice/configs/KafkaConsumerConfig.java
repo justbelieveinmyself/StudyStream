@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.userservice.configs;
 
-import com.justbelieveinmyself.userservice.domains.dtos.EmailUpdateDto;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.kafka.EmailUpdateDeserializer;
 import com.justbelieveinmyself.userservice.kafka.UserDtoDeserializer;

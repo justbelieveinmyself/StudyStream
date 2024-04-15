@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.courseservice.kafka;
+package com.justbelieveinmyself.mailservice.kafka.deserializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justbelieveinmyself.library.dto.UserDto;
@@ -11,7 +11,7 @@ public class UserDtoDeserializer implements Deserializer<UserDto> {
     @Override
     public UserDto deserialize(String s, byte[] data) {
         try {
-            if (data == null){
+            if (data == null) {
                 System.out.println("Null received at deserializing");
                 return null;
             }

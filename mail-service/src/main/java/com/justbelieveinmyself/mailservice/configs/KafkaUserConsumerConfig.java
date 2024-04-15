@@ -1,7 +1,7 @@
 package com.justbelieveinmyself.mailservice.configs;
 
-import com.justbelieveinmyself.library.dto.EnrollmentEvent;
-import com.justbelieveinmyself.mailservice.kafka.deserializers.EnrollmentEventDeserializer;
+import com.justbelieveinmyself.library.dto.UserDto;
+import com.justbelieveinmyself.mailservice.kafka.deserializers.UserDtoDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -16,20 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaEnrollmentConsumerConfig {
+public class KafkaUserConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, EnrollmentEvent> consumerFactory() {
+    public ConsumerFactory<String, UserDto> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EnrollmentEventDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserDtoDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, EnrollmentEvent>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, EnrollmentEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UserDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }

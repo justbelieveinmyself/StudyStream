@@ -1,7 +1,6 @@
 package com.justbelieveinmyself.mailservice.kafka;
 
 import com.justbelieveinmyself.library.dto.EnrollmentEvent;
-import com.justbelieveinmyself.mailservice.dto.EmailVerificationDto;
 import com.justbelieveinmyself.mailservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.NotImplementedException;

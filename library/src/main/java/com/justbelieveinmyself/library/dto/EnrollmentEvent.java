@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EnrollmentEvent {
     private long userId;
-    private long courseId;
+    private String courseTitle;
     private EnrollmentEventType eventType;
 }

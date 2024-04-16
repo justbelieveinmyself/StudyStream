@@ -13,7 +13,7 @@ public class UserDtoListener {
 
     @KafkaListener(topics = {"user-registration-topic"}, groupId = "group-id")
     public void listenUserDto(UserDto userDto) {
-        System.out.println("New message: " + userDto.toString());
+        log.info("New message: " + userDto.toString());
         userService.saveUser(userDto);
     }
 

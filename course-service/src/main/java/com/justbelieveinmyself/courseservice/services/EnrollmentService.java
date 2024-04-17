@@ -33,7 +33,7 @@ public class EnrollmentService {
         enrollment.setUser(userService.findById(userId));
 
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
-        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseId, EnrollmentEventType.ENROLLMENT));
+        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseService.findById(courseId).getTitle(), EnrollmentEventType.ENROLLMENT));
 
         return new EnrollmentDto().fromEntity(savedEnrollment);
     }
@@ -44,7 +44,7 @@ public class EnrollmentService {
 
         enrollmentRepository.delete(enrollment);
 
-        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseId, EnrollmentEventType.DROP));
+        mailService.sendEnrollmentEvent(new EnrollmentEvent(userId, courseService.findById(courseId).getTitle(), EnrollmentEventType.DROP));
     }
 
     public Map<Long, List<Long>> getAllUsersOnCourse(Long courseId) {

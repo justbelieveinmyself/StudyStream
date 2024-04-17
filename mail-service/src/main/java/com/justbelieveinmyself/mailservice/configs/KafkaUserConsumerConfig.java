@@ -19,7 +19,7 @@ import java.util.Map;
 public class KafkaUserConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, UserDto> consumerFactory() {
+    public ConsumerFactory<String, UserDto> userConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -28,9 +28,9 @@ public class KafkaUserConsumerConfig {
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> userContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UserDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(userConsumerFactory());
         return factory;
     }
 

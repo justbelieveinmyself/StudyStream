@@ -20,12 +20,22 @@ services:
     depends_on:
       - zookeeper
 
-  mysql:
+  mysql_user:
     image: mysql:8.0.33
     ports:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: studystream
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: shadow
+      MYSQL_PASSWORD: 1234
+
+  mysql_mail:
+    image: mysql:8.0.33
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: mail
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_USER: shadow
       MYSQL_PASSWORD: 1234

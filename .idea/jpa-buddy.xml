@@ -6,7 +6,7 @@
     <option name="sourceModelValue" value="Default" />
     <option name="targetDbValue" value="63a63653-b323-4a4b-a016-f3571b9e6c9f" />
     <option name="isSnapshotDb" value="false" />
-    <option name="snapshotModelValue" value="Default" />
+    <option name="snapshotModelValue" value="mailservice" />
     <option name="liquibaseAuthor" value="justbelieveinmyself" />
   </component>
 </project>

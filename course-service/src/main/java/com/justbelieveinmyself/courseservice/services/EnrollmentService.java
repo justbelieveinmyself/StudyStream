@@ -26,7 +26,7 @@ public class EnrollmentService {
     private final MailService mailService;
 
     public EnrollmentDto enrollToCourse(Long courseId, Long userId) {
-        Enrollment enrollment = new Enrollment();
+        Enrollment enrollment = new Enrollment(); //TODO: fix enroll entity with relations
         enrollment.setEnrollmentTime(Instant.now());
         enrollment.setStatus(EnrollmentStatus.ACTIVE);
         enrollment.setCourse(courseService.findById(courseId));

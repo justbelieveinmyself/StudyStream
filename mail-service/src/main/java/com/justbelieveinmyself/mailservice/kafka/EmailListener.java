@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class EmailListener {
     private final EmailService emailService;
 
-    @KafkaListener(topics = "user-email-verify-topic", groupId = "group-id", containerFactory = "emailVerificationContainerFactory")
+    @KafkaListener(topics = "user-email-verify-topic", groupId = "email-verify-group-id", containerFactory = "emailVerificationContainerFactory")
     public void emailVerificationListener(EmailVerificationDto emailVerificationDto) {
         log.info("Verify email: " + emailVerificationDto.getEmail());
         emailService.sendVerification(emailVerificationDto);
     }
 
-    @KafkaListener(topics = "user-email-update-topic", groupId = "group-id", containerFactory = "emailUpdateContainerFactory")
+    @KafkaListener(topics = "user-email-update-topic", groupId = "email-update-group-id", containerFactory = "emailUpdateContainerFactory")
     public void emailUpdateListener(EmailUpdateDto emailUpdateDto) {
         log.info("Update email: " + emailUpdateDto.getEmail());
         emailService.updateEmail(emailUpdateDto);

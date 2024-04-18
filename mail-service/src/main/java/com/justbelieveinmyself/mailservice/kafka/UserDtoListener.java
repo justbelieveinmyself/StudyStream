@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserDtoListener {
     private final UserService userService;
 
-    @KafkaListener(topics = {"user-registration-topic"}, groupId = "group-id", containerFactory = "userContainerFactory")
+    @KafkaListener(topics = "user-registration-topic", groupId = "registration-group-id-mail", containerFactory = "userContainerFactory")
     public void listenUserDto(UserDto userDto) {
         log.info("New message: " + userDto.toString());
         userService.saveUser(userDto.getId(), userDto.getUsername(), userDto.getEmail());

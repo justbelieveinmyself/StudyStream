@@ -4,7 +4,9 @@ import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.library.dto.Dto;
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.enums.Role;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
@@ -33,4 +35,5 @@ public class UserDto implements Dto<User> {
         ModelUtils.copyProperties(this, user);
         return user;
     }
+
 }

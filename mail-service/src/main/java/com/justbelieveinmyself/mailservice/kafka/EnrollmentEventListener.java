@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class EnrollmentEventListener {
     private final EmailService emailService;
 
-    @KafkaListener(topics = "user-enrollment-course", groupId = "group-id", containerFactory = "enrollmentContainerFactory")
+    @KafkaListener(topics = "user-enrollment-course", groupId = "enrollment-group-id", containerFactory = "enrollmentContainerFactory")
     public void handleEnrollmentEvent(EnrollmentEvent enrollmentEvent) {
         log.info("Received Enrollment event: " + enrollmentEvent);
         switch (enrollmentEvent.getEventType()) {

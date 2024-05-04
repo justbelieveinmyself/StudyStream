@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "lessons")
@@ -32,4 +33,7 @@ public abstract class Lesson {
     @ManyToOne
     @JoinColumn(name = "module_id")
     private Module module;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "lesson_id")
+    private List<File> resources;
 }

@@ -111,7 +111,7 @@ class UserRepositoryTest {
 
         Optional<User> userOptional = userRepository.findByUsername(username);
 
-        assertNotNull(userOptional.get());
+        assertTrue(userOptional.isPresent());
         assertEquals(user, userOptional.get());
     }
 
@@ -128,7 +128,7 @@ class UserRepositoryTest {
 
         Optional<User> userOptional = userRepository.findByActivationCode(code);
 
-        assertNotNull(userOptional.get());
+        assertTrue(userOptional.isPresent());
         assertEquals(user, userOptional.get());
     }
 

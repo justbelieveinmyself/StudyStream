@@ -1,4 +1,3 @@
-/*
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,10 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,9 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
-@TestPropertySource(properties = {
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
-})
+@EmbeddedKafka
+/*@TestPropertySource(properties = {
+        "spring.kafka.admin.fail-fast=true",
+        "spring.kafka.bootstrap-servers=",
+        "spring.kafka."
+})*/
 class AuthControllerTest {
 
     @InjectMocks
@@ -75,4 +76,3 @@ class AuthControllerTest {
     void refresh() {
     }
 }
-*/

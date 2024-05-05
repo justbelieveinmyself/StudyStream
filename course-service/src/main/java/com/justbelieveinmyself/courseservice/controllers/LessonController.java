@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/courses/{courseId}/modules/{moduleId}/lessons")
@@ -95,6 +96,20 @@ public class LessonController { //TODO: controllers to interfaces?
     ) {
         LessonDto lesson = lessonService.patchLessonById(courseId, lessonId, userId, lessonDto);
         return ResponseEntity.ok(lesson);
+    }
+
+    @Operation(summary = "Add resources to lesson.")
+    @PostMapping(value = "{lessonId}/resources", consumes = "application/octet-stream")
+    @CheckLessonExistsInModule
+    public ResponseEntity<ResponseMessage> addResources(
+            @PathVariable Long courseId,
+            @PathVariable Long moduleId,
+            @PathVariable Long lessonId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @RequestBody MultipartFile[] files
+    ){
+        lessonService.addResources(courseId, lessonId, userId, files);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

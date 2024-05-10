@@ -1,4 +1,4 @@
-package com.justbelieveinmyself.mailservice.dto;
+package com.justbelieveinmyself.library.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EmailVerificationDto {
-    private String username;
+public class EmailUpdateDto {
+    private Long userId;
     private String email;
-    private String activationCode;
 }

@@ -34,13 +34,7 @@ public class AuthService {
         if (userRepository.existsByUsernameOrEmail(registerDto.getUsername(), registerDto.getEmail())) {
             throw new ConflictException("User with username or email already exists!");
         }
-        User user = new User();
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setEmail(registerDto.getEmail());
-        user.setRoles(Set.of(Role.STUDENT));
-        String activationCode = UUID.randomUUID().toString();
-        user.setActivationCode(activationCode);
+        User user = createUserFromRegisterDto(registerDto);
 
         User savedUser = userRepository.save(user);
 
@@ -50,7 +44,7 @@ public class AuthService {
         userDto.setPhone(registerDto.getPhone());
         userDtoKafkaTemplate.send("user-registration-topic", userDto);
 
-        emailService.sendActivationCode(userDto.getUsername(), userDto.getEmail(), activationCode);
+        emailService.sendActivationCode(userDto.getUsername(), userDto.getEmail(), savedUser.getActivationCode());
 
         return userDto;
     }
@@ -61,6 +55,16 @@ public class AuthService {
         User user = userRepository.findByUsername(loginRequestDto.getUsername()).get();
         RefreshResponseDto refreshResponseDto = refreshTokenService.createRefreshToken(user);
         return refreshResponseDto;
+    }
+
+    private User createUserFromRegisterDto(RegisterDto registerDto) {
+        User user = new User();
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setEmail(registerDto.getEmail());
+        user.setRoles(Set.of(Role.STUDENT));
+        user.setActivationCode(UUID.randomUUID().toString());
+        return user;
     }
 
 }

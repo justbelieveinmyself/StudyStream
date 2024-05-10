@@ -1,27 +1,22 @@
 package com.justbelieveinmyself.courseservice.kafka;
 
-import com.justbelieveinmyself.courseservice.domains.dtos.UserDto;
-import com.justbelieveinmyself.courseservice.domains.entities.User;
-import com.justbelieveinmyself.courseservice.repositories.UserRepository;
+import com.justbelieveinmyself.courseservice.services.UserService;
+import com.justbelieveinmyself.library.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserDtoListener {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @KafkaListener(topics = {"user-registration-topic"}, groupId = "group-id")
     public void listenUserDto(UserDto userDto) {
-        System.out.println("New message: " + userDto.toString());
-        saveUser(userDto);
-    }
-
-    public void saveUser(UserDto userDto) {
-        User user = User.builder().id(userDto.getId()).build();
-        userRepository.save(user);
+        log.info("New message: " + userDto.toString());
+        userService.saveUser(userDto);
     }
 
 }

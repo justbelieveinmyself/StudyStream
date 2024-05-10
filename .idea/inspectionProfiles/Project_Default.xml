@@ -7,6 +7,7 @@
           <option value="X-Username" />
           <option value="X-UserId" />
           <option value="X-User-Id" />
+          <option value="X-User-Roles" />
         </set>
       </option>
     </inspection_tool>

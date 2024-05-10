@@ -1,7 +1,7 @@
 package com.justbelieveinmyself.authservice.services;
 
 import com.justbelieveinmyself.authservice.domains.dtos.EmailDto;
-import com.justbelieveinmyself.authservice.domains.dtos.EmailUpdateDto;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.library.dto.EmailVerificationDto;
@@ -44,7 +44,7 @@ public class EmailService {
         emailUpdateKafkaTemplate.send("user-email-update-topic", emailUpdateDto);
     }
 
-    public void verifyEmail(String activationCode) {
+    public void verifyEmail(String activationCode) { //TODO: exception
         User user = userRepository.findByActivationCode(activationCode).orElseThrow(() -> new NotFoundException("Activation code not found or already used!"));
         user.setActivationCode(null);
         userRepository.save(user);

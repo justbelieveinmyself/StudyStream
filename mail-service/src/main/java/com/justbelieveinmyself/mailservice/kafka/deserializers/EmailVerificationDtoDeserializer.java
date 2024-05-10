@@ -1,10 +1,12 @@
-package com.justbelieveinmyself.mailservice.kafka;
+package com.justbelieveinmyself.mailservice.kafka.deserializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.justbelieveinmyself.mailservice.dto.EmailVerificationDto;
+import com.justbelieveinmyself.mailservice.domains.dto.EmailVerificationDto;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
+@Log4j2
 public class EmailVerificationDtoDeserializer implements Deserializer<EmailVerificationDto> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -12,13 +14,14 @@ public class EmailVerificationDtoDeserializer implements Deserializer<EmailVerif
     public EmailVerificationDto deserialize(String s, byte[] data) {
         try {
             if (data == null){
-                System.out.println("Null received at deserializing");
+                log.info("Null received at deserializing");
                 return null;
             }
-            System.out.println("Deserializing...");
+            log.info("Deserializing...");
             return objectMapper.readValue(new String(data, "UTF-8"), EmailVerificationDto.class);
         } catch (Exception e) {
             throw new SerializationException("Error when deserializing byte[] to EmailVerificationDto");
         }
     }
+
 }

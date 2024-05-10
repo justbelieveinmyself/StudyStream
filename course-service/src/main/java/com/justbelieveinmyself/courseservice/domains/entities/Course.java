@@ -10,9 +10,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -28,7 +28,7 @@ public class Course {
     private String title;
     private String description;
     @CreationTimestamp
-    private ZonedDateTime creationTime;
+    private Instant creationTime;
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "author_id")
     private User author;
@@ -40,8 +40,14 @@ public class Course {
     private Double rating;
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
-    @OneToMany(mappedBy = "course", orphanRemoval = true)
-    private List<Module> modules;
+    @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Module> modules = new ArrayList<>();
     @OneToOne(mappedBy = "course")
     private Enrollment enrollment;
+
+    public void addModule(Module module) {
+        module.setCourse(this);
+        this.modules.add(module);
+    }
+
 }

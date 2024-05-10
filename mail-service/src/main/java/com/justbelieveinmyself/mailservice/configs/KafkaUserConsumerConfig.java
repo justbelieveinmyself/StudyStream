@@ -1,22 +1,25 @@
-package com.justbelieveinmyself.courseservice.configs;
+package com.justbelieveinmyself.mailservice.configs;
 
-import com.justbelieveinmyself.courseservice.domains.dtos.UserDto;
-import com.justbelieveinmyself.courseservice.kafka.UserDtoDeserializer;
+import com.justbelieveinmyself.library.dto.UserDto;
+import com.justbelieveinmyself.mailservice.kafka.deserializers.UserDtoDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaConsumerConfig {
+public class KafkaUserConsumerConfig {
+
     @Bean
-    public ConsumerFactory<String, UserDto> kafkaConsumerFactory() {
+    public ConsumerFactory<String, UserDto> userConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -25,9 +28,9 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, UserDto> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, UserDto>> userContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UserDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(kafkaConsumerFactory());
+        factory.setConsumerFactory(userConsumerFactory());
         return factory;
     }
 

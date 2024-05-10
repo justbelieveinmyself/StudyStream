@@ -1,8 +1,8 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
 import com.justbelieveinmyself.courseservice.domains.dtos.CourseDto;
-import com.justbelieveinmyself.courseservice.domains.dtos.UpdateCourseDto;
-import com.justbelieveinmyself.courseservice.services.CourseService;
+import com.justbelieveinmyself.courseservice.domains.dtos.update.UpdateCourseDto;
+import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,59 +10,64 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/v1/course")
-@CrossOrigin
-@RequiredArgsConstructor
+import java.util.List;
+
 @Tag(name = "Course API", description = "Create, get, update and delete courses")
 @SecurityRequirement(name = "Bearer Authentication")
-public class CourseController {
-    private final CourseService courseService;
+public interface CourseController {
+
+    @Operation(summary = "Get Courses", description = "Get Courses")
+    @GetMapping
+    ResponseEntity<Page<CourseDto>> getCourses(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) CourseDifficulty difficulty,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "5") int pageSize
+    );
 
     @Operation(summary = "Get Course by ID", description = "Get Course by ID")
     @GetMapping("/{courseId}")
-    public ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId) {
-        CourseDto courseDto = courseService.getCourseById(courseId);
-        // 1. representation from dtos? embedded? ex. course includes a lot of modules, modules contains lessons, lessons contains a lot of questions etc..
-        // 2. service must returns responseentity or dto?
-        return ResponseEntity.ok(courseDto);
-    }
+    ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId);
 
     @Operation(summary = "Create Course", description = "Create Course")
     @PostMapping
     @ValidateErrors
-    public ResponseEntity<CourseDto> createNewCourse(@RequestBody @Valid CourseDto courseDto, BindingResult result) {
-        CourseDto savedCourseDto = courseService.createNewCourse(courseDto);
-        return new ResponseEntity<>(savedCourseDto, HttpStatus.CREATED);
-    }
+    ResponseEntity<CourseDto> createNewCourse(
+            @RequestBody @Valid CourseDto courseDto,
+            BindingResult result,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
+    );
 
     @Operation(summary = "Delete Course by ID", description = "Delete Course by ID")
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<ResponseMessage> deleteCourseById(
+    ResponseEntity<ResponseMessage> deleteCourseById(
             @PathVariable Long courseId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId
-    ) {
-        courseService.deleteCourseById(courseId, userId);
-        return ResponseEntity.noContent().build();
-    }
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId
+    );
 
     @Operation(summary = "Update Course by ID", description = "Update Course by ID")
     @PutMapping("/{courseId}")
     @ValidateErrors
-    public ResponseEntity<CourseDto> updateCourseById(
+    ResponseEntity<CourseDto> updateCourseById(
             @PathVariable Long courseId,
-            @Parameter(hidden = true) @RequestHeader("X-UserId") Long userId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid UpdateCourseDto updateCourseDto,
             BindingResult result
-    ) {
-        CourseDto courseDto = courseService.updateCourseById(courseId, userId, updateCourseDto);
-        return ResponseEntity.ok(courseDto);
-    }
+    );
+
+    @Operation(summary = "Partial Update Course by ID", description = "Partial Update Course by ID")
+    @PatchMapping("/{courseId}")
+    ResponseEntity<CourseDto> patchCourseById(
+            @PathVariable Long courseId,
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @RequestBody UpdateCourseDto updateCourseDto,
+            BindingResult result
+    );
 
 }

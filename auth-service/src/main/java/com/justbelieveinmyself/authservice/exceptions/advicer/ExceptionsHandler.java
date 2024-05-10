@@ -1,6 +1,7 @@
 package com.justbelieveinmyself.authservice.exceptions.advicer;
 
 import com.justbelieveinmyself.library.exception.ConflictException;
+import com.justbelieveinmyself.library.exception.NotFoundException;
 import com.justbelieveinmyself.library.exception.UnprocessableEntityException;
 import com.justbelieveinmyself.library.dto.ResponseError;
 import com.justbelieveinmyself.library.exception.UnauthorizedException;
@@ -30,6 +31,12 @@ public class ExceptionsHandler {
     public ResponseEntity<ResponseError> handleUnauthorizedException(UnauthorizedException e) {
         ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 401);
         return new ResponseEntity<>(responseError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<ResponseError> handleNotFoundException(NotFoundException e) {
+        ResponseError responseError = new ResponseError(e.getMessage(), Instant.now(), 404);
+        return new ResponseEntity<>(responseError, HttpStatus.NOT_FOUND);
     }
 
 }

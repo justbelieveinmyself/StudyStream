@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class TestQuestion {
     private String text;
     @ElementCollection
     @CollectionTable(name = "test_question_options", joinColumns = @JoinColumn(name = "question_id", nullable = false))
-    private List<String> options;
+    private List<String> options = new ArrayList<>();
     @Column(nullable = false)
     private Integer correctOptionIndex;
     @ManyToOne

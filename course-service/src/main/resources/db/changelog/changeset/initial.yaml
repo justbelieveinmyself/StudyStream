@@ -1,0 +1,354 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1712777650044-1
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: course_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1712777650044-2
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: enrollment_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1712777650044-3
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: lesson_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1712777650044-4
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: module_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1712777650044-5
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: question_id_seq
+            startValue: 1
+  - changeSet:
+      id: 1712777650044-6
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_courses
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: creation_time
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: author_id
+                  type: BIGINT
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+              - column:
+                  name: difficulty
+                  type: VARCHAR(255)
+              - column:
+                  name: duration
+                  type: INT
+              - column:
+                  name: price
+                  type: DECIMAL
+              - column:
+                  name: rating
+                  type: DOUBLE
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+            tableName: courses
+  - changeSet:
+      id: 1712777650044-7
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_enrollments
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: course_id
+                  type: BIGINT
+              - column:
+                  name: enrollment_time
+                  type: DATETIME
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+            tableName: enrollments
+  - changeSet:
+      id: 1712777650044-8
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_lessons
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: lesson_type
+                  type: VARCHAR(31)
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: lesson_order
+                  type: INT
+              - column:
+                  name: creation_time
+                  type: DATETIME
+              - column:
+                  name: dead_line
+                  type: DATETIME
+              - column:
+                  name: module_id
+                  type: BIGINT
+              - column:
+                  name: instruction
+                  type: VARCHAR(255)
+              - column:
+                  name: duration_minutes
+                  type: INT
+            tableName: lessons
+  - changeSet:
+      id: 1712777650044-9
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_modules
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: creation_time
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: course_id
+                  type: BIGINT
+            tableName: modules
+  - changeSet:
+      id: 1712777650044-10
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: question_id
+                  type: BIGINT
+              - column:
+                  name: options
+                  type: VARCHAR(255)
+            tableName: test_question_options
+  - changeSet:
+      id: 1712777650044-11
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_test_questions
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: text
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: correct_option_index
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: lesson_id
+                  type: BIGINT
+            tableName: test_questions
+  - changeSet:
+      id: 1712777650044-12
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users
+                  name: id
+                  type: BIGINT
+            tableName: users
+  - changeSet:
+      id: 1712777650044-13
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: course_id
+            constraintName: uc_enrollments_course
+            tableName: enrollments
+  - changeSet:
+      id: 1712777650044-14
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id
+            constraintName: uc_enrollments_user
+            tableName: enrollments
+  - changeSet:
+      id: 1712777650044-15
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: author_id
+            baseTableName: courses
+            constraintName: FK_COURSES_ON_AUTHOR
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1712777650044-16
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: course_id
+            baseTableName: enrollments
+            constraintName: FK_ENROLLMENTS_ON_COURSE
+            referencedColumnNames: id
+            referencedTableName: courses
+  - changeSet:
+      id: 1712777650044-17
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: enrollments
+            constraintName: FK_ENROLLMENTS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1712777650044-18
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: module_id
+            baseTableName: lessons
+            constraintName: FK_LESSONS_ON_MODULE
+            referencedColumnNames: id
+            referencedTableName: modules
+  - changeSet:
+      id: 1712777650044-19
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: course_id
+            baseTableName: modules
+            constraintName: FK_MODULES_ON_COURSE
+            referencedColumnNames: id
+            referencedTableName: courses
+  - changeSet:
+      id: 1712777650044-20
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: lesson_id
+            baseTableName: test_questions
+            constraintName: FK_TEST_QUESTIONS_ON_LESSON
+            referencedColumnNames: id
+            referencedTableName: lessons
+  - changeSet:
+      id: 1712777650044-21
+      author: justbelieveinmyself
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: question_id
+            baseTableName: test_question_options
+            constraintName: fk_test_question_options_on_test_question
+            referencedColumnNames: id
+            referencedTableName: test_questions
+

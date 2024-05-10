@@ -1,12 +1,10 @@
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.justbelieveinmyself.authservice.domains.dtos.*;
-import com.justbelieveinmyself.authservice.services.RefreshTokenService;
-import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
-import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import com.justbelieveinmyself.authservice.services.AuthService;
+import com.justbelieveinmyself.authservice.services.RefreshTokenService;
+import com.justbelieveinmyself.library.aspects.ValidateErrors;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

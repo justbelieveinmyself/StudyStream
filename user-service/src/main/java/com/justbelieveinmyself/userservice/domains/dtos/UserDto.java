@@ -1,12 +1,12 @@
 package com.justbelieveinmyself.userservice.domains.dtos;
 
 import com.justbelieveinmyself.library.dto.Dto;
+import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.userservice.domains.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Set;
 
@@ -25,14 +25,14 @@ public class UserDto implements Dto<User> {
     @Override
     public UserDto fromEntity(User user) {
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user, userDto);
+        ModelUtils.copyProperties(user, userDto);
         return userDto;
     }
 
     @Override
     public User toEntity() {
         User user = new User();
-        BeanUtils.copyProperties(this, user);
+        ModelUtils.copyProperties(this, user);
         return user;
     }
 }

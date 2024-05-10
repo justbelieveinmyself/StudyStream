@@ -1,5 +1,6 @@
-package com.justbelieveinmyself.courseservice.domains.dtos;
+package com.justbelieveinmyself.courseservice.domains.dtos.update;
 
+import com.justbelieveinmyself.courseservice.domains.dtos.ModuleDto;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseStatus;
 import jakarta.validation.constraints.Min;

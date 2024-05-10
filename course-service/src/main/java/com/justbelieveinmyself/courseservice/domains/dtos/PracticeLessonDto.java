@@ -2,30 +2,44 @@ package com.justbelieveinmyself.courseservice.domains.dtos;
 
 import com.justbelieveinmyself.courseservice.domains.entities.Lesson;
 import com.justbelieveinmyself.courseservice.domains.entities.PracticeLesson;
-import com.justbelieveinmyself.library.dto.Dto;
-import org.springframework.beans.BeanUtils;
+import com.justbelieveinmyself.library.dto.ModelUtils;
+import jakarta.validation.constraints.NotBlank;
 
-public class PracticeLessonDto extends LessonDto implements Dto<PracticeLesson> {
-    private String description;
+public class PracticeLessonDto extends LessonDto {
+    @NotBlank(message = "Please, enter [instruction] of lesson!")
     private String instruction;
 
     @Override
-    public PracticeLessonDto fromEntity(PracticeLesson entity) {
+    public PracticeLessonDto fromEntity(Lesson entity) {
         PracticeLessonDto dto = new PracticeLessonDto();
-        BeanUtils.copyProperties(entity, dto);
+        ModelUtils.copyProperties(entity, dto);
         dto.setLessonType("PRACTICE");
-        dto.setModuleId(entity.getModule().getId());
+        if (entity.getModule() != null) {
+            dto.setModuleId(entity.getModule().getId());
+        }
         return dto;
     }
 
     /**
-     * @return PracticeLesson without Module
+     * @return PracticeLesson without moduleId, id, creationTime
      */
     @Override
     public PracticeLesson toEntity() {
         PracticeLesson entity = new PracticeLesson();
-        BeanUtils.copyProperties(this, entity);
+        ModelUtils.copyProperties(this, entity);
+
+        entity.setId(null);
+        entity.setCreationTime(null);
+
         return entity;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
 }

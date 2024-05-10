@@ -14,6 +14,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PracticeLesson extends Lesson {
-    private String description;
     private String instruction;
 }

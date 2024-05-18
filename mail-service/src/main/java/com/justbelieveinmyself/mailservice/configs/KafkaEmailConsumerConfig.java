@@ -23,7 +23,6 @@ public class KafkaEmailConsumerConfig {
     @Bean
     public ConsumerFactory<String, EmailVerificationDto> emailVerificationConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EmailVerificationDtoDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
@@ -39,7 +38,6 @@ public class KafkaEmailConsumerConfig {
     @Bean
     public ConsumerFactory<String, EmailUpdateDto> emailUpdateConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EmailUpdateDtoDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);

@@ -23,7 +23,6 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, UserDto> userProducerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, UserDtoSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
@@ -37,7 +36,6 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, EmailVerificationDto> emailVerificationProducerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EmailVerificationDtoSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
@@ -51,7 +49,6 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, EmailUpdateDto> emailUpdateProducerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EmailUpdateDtoSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);

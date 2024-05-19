@@ -2,8 +2,10 @@ package com.justbelieveinmyself.mailservice.configs;
 
 import com.justbelieveinmyself.library.dto.UserDto;
 import com.justbelieveinmyself.mailservice.kafka.deserializers.UserDtoDeserializer;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -13,11 +15,14 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaUserConsumerConfig {
-
+    @Value("${spring.kafka.consumer.bootstrap-servers}")
+    private final List<String> bootstrapServers;
     @Bean
     public ConsumerFactory<String, UserDto> userConsumerFactory() {
         Map<String, Object> props = new HashMap<>();

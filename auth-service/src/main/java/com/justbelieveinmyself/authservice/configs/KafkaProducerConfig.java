@@ -5,6 +5,7 @@ import com.justbelieveinmyself.authservice.kafka.EmailUpdateDtoSerializer;
 import com.justbelieveinmyself.authservice.kafka.EmailVerificationDtoSerializer;
 import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.EmailVerificationDto;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -43,6 +44,7 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, EmailVerificationDto> emailVerificationProducerFactory() {
         Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EmailVerificationDtoSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);

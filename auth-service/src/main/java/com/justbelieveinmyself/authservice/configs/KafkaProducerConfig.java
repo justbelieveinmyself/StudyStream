@@ -5,7 +5,6 @@ import com.justbelieveinmyself.authservice.kafka.EmailUpdateDtoSerializer;
 import com.justbelieveinmyself.authservice.kafka.EmailVerificationDtoSerializer;
 import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.EmailVerificationDto;
-import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

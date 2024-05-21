@@ -1,5 +1,8 @@
 package com.justbelieveinmyself.authservice.services;
 
+import com.justbelieveinmyself.authservice.apiclients.CourseServiceClient;
+import com.justbelieveinmyself.authservice.apiclients.MailServiceClient;
+import com.justbelieveinmyself.authservice.apiclients.UserServiceClient;
 import com.justbelieveinmyself.authservice.domains.dtos.LoginRequestDto;
 import com.justbelieveinmyself.authservice.domains.dtos.RefreshResponseDto;
 import com.justbelieveinmyself.authservice.domains.dtos.RegisterDto;
@@ -26,8 +29,10 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
-    private final KafkaTemplate<String, UserDto> userDtoKafkaTemplate;
     private final EmailService emailService;
+    private final UserServiceClient userServiceClient;
+    private final CourseServiceClient courseServiceClient;
+    private final MailServiceClient mailServiceClient;
 
     @Transactional
     public UserDto register(RegisterDto registerDto) {
@@ -42,7 +47,10 @@ public class AuthService {
         userDto.setFirstName(registerDto.getUsername());
         userDto.setLastName(registerDto.getLastName());
         userDto.setPhone(registerDto.getPhone());
-        userDtoKafkaTemplate.send("user-registration-topic", userDto);
+
+        userServiceClient.createUser(userDto);
+        courseServiceClient.createUser(userDto.getId());
+        mailServiceClient.createUser(userDto.getId(), userDto.getEmail(), userDto.getUsername());
 
         emailService.sendActivationCode(userDto.getUsername(), userDto.getEmail(), savedUser.getActivationCode());
 

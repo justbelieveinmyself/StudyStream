@@ -81,6 +81,8 @@ services:
     image: config-server:latest
     ports:
       - "8888:8080"
+    volumes:
+      - ./config/properties:/app/config
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
 
@@ -90,10 +92,7 @@ services:
       - "8083:8080"
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_auth:5432/studystream
-      - SPRING_DATASOURCE_USERNAME=shadow
-      - SPRING_DATASOURCE_PASSWORD=1234
-      - SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka:9092
+      - spring.config.import=http://config-service:8888
 
   api-gateway:
     image: api-gateway:latest
@@ -101,6 +100,7 @@ services:
       - "8082:8080"
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
+      - spring.config.import=http://config-service:8888
 
   mail-service:
     image: mail-service:latest
@@ -108,6 +108,7 @@ services:
       - "8086:8080"
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
+      - spring.config.import=http://config-service:8888
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
 
@@ -117,14 +118,14 @@ services:
       - "8085:8080"
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql_course:5433/courseservice
-      - SPRING_DATASOURCE_USERNAME=shadow
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - spring.config.import=http://config-service:8888
 
   eureka-server:
     image: eureka-server:latest
     ports:
       - "8081:8080"
+    environment:
+      - spring.config.import=http://config-service:8888
 
   user-service:
     image: user-service:latest
@@ -132,6 +133,7 @@ services:
       - "8084:8080"
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
+      - spring.config.import=http://config-service:8888
 
 volumes:
   postgres_auth_data:

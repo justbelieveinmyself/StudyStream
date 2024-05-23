@@ -1,8 +1,8 @@
-FROM openjdk:11-jre-slim
-
+FROM openjdk:17.0.2-jdk-slim-buster
+ARG JAR_FILE=target/*.jar
 WORKDIR /app
 
-COPY target/config-server-0.0.1-SNAPSHOT.jar /app/config-server.jar
+COPY ${JAR_FILE} /app/config-server.jar
 
 EXPOSE 8888
 

@@ -1,6 +1,9 @@
 package com.justbelieveinmyself.authservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.justbelieveinmyself.authservice.apiclients.CourseServiceClient;
+import com.justbelieveinmyself.authservice.apiclients.MailServiceClient;
+import com.justbelieveinmyself.authservice.apiclients.UserServiceClient;
 import com.justbelieveinmyself.authservice.domains.dtos.RegisterDto;
 import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.authservice.services.AuthService;
@@ -13,8 +16,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -26,18 +29,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
-@EmbeddedKafka
-/*@TestPropertySource(properties = {
-        "spring.kafka.admin.fail-fast=true",
-        "spring.kafka.bootstrap-servers=",
-        "spring.kafka."
-})*/
+@EmbeddedKafka(count = 1, ports = {9092})
 class AuthControllerTest {
 
     @InjectMocks
     private AuthController authController;
     @Mock
     private AuthService authService;
+    @MockBean
+    private UserServiceClient userServiceClient;
+    @MockBean
+    private CourseServiceClient courseServiceClient;
+    @MockBean
+    private MailServiceClient mailServiceClient;
     @Mock
     private RefreshTokenService refreshTokenService;
     @Autowired

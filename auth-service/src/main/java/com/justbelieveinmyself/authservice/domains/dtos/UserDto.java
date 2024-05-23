@@ -4,15 +4,15 @@ import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.library.dto.Dto;
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.enums.Role;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class UserDto implements Dto<User> {
     private Long id;
     private String username;

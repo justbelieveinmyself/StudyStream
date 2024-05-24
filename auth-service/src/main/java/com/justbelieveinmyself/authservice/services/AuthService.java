@@ -12,7 +12,6 @@ import com.justbelieveinmyself.authservice.repository.UserRepository;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.library.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +43,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         UserDto userDto = new UserDto().fromEntity(savedUser);
-        userDto.setFirstName(registerDto.getUsername());
+        userDto.setFirstName(registerDto.getFirstName());
         userDto.setLastName(registerDto.getLastName());
         userDto.setPhone(registerDto.getPhone());
 

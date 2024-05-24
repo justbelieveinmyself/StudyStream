@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justbelieveinmyself.authservice.apiclients.CourseServiceClient;
 import com.justbelieveinmyself.authservice.apiclients.MailServiceClient;
 import com.justbelieveinmyself.authservice.apiclients.UserServiceClient;
-import com.justbelieveinmyself.authservice.domains.dtos.LoginRequestDto;
-import com.justbelieveinmyself.authservice.domains.dtos.RefreshResponseDto;
-import com.justbelieveinmyself.authservice.domains.dtos.RegisterDto;
-import com.justbelieveinmyself.authservice.domains.dtos.UserDto;
+import com.justbelieveinmyself.authservice.domains.dtos.*;
 import com.justbelieveinmyself.authservice.services.AuthService;
 import com.justbelieveinmyself.authservice.services.RefreshTokenService;
 import com.justbelieveinmyself.library.enums.Role;
@@ -21,14 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.Instant;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,10 +53,10 @@ class AuthControllerTest {
     @Test
     @DisplayName("On register must call authService.register() and return UserDto")
     void register() throws Exception {
-        Long id = 1L;
-        String username = "username";
-        String email = "email@email.com";
-        String phone = "+79718009324";
+        final Long id = 1L;
+        final String username = "username";
+        final String email = "email@email.com";
+        final String phone = "+79718009324";
         Set<Role> roles = Set.of(Role.STUDENT);
 
         RegisterDto registerDto = RegisterDto.builder()
@@ -79,10 +75,11 @@ class AuthControllerTest {
 
         when(authService.register(any(RegisterDto.class))).thenReturn(userDto);
 
+
         String registerDtoJson = objectMapper.writeValueAsString(registerDto);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(registerDtoJson))
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerDtoJson))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
@@ -97,10 +94,10 @@ class AuthControllerTest {
     @Test
     @DisplayName("On login must call authService.login() and return RefreshResponseDto")
     void login() throws Exception {
-        String username = "username";
-        String refreshToken = "refreshToken";
-        Instant refreshTokenExpiration = Instant.now();
-        String accessToken = "accessToken";
+        final String username = "username";
+        final String refreshToken = "refreshToken";
+        final Instant refreshTokenExpiration = Instant.now();
+        final String accessToken = "accessToken";
         Instant accessTokenExpiration = Instant.now().plusMillis(2000);
 
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
@@ -115,22 +112,53 @@ class AuthControllerTest {
 
         when(authService.login(any(LoginRequestDto.class))).thenReturn(refreshResponseDto);
 
+
         String loginRequestDtoJson = objectMapper.writeValueAsString(loginRequestDto);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginRequestDtoJson))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.refreshToken").value(refreshToken))
-                .andExpect(jsonPath("$.refreshTokenExpiration", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")))
+                .andExpect(jsonPath("$.refreshTokenExpiration").value(refreshTokenExpiration.toString()))
                 .andExpect(jsonPath("$.accessToken").value(accessToken))
-                .andExpect(jsonPath("$.accessTokenExpiration", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")));
+                .andExpect(jsonPath("$.accessTokenExpiration").value(accessTokenExpiration.toString()));
 
         verify(authService, times(1)).login(any(LoginRequestDto.class));
     }
 
     @Test
-    @DisplayName("On register must call authService.register() and return UserDto")
-    void refresh() {
+    @DisplayName("On refresh must call refreshTokenService.refreshToken() and return RefreshResponseDto")
+    void refresh() throws Exception {
+        final String refreshToken = "refreshToken";
+        final Instant refreshTokenExpiration = Instant.now();
+        final String accessToken = "accessToken";
+        final Instant accessTokenExpiration = Instant.now().plusMillis(2000);
+
+        RefreshRequestDto refreshRequestDto = RefreshRequestDto.builder()
+                .refreshToken(refreshToken)
+                .build();
+
+        RefreshResponseDto refreshResponseDto = RefreshResponseDto.builder()
+                .refreshToken(refreshToken)
+                .refreshTokenExpiration(refreshTokenExpiration)
+                .accessToken(accessToken)
+                .accessTokenExpiration(accessTokenExpiration).build();
+
+        when(refreshTokenService.refreshToken(any(RefreshRequestDto.class))).thenReturn(refreshResponseDto);
+
+
+        String refreshRequestDtoJson = objectMapper.writeValueAsString(refreshRequestDto);
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(refreshRequestDtoJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.refreshToken").value(refreshToken))
+                .andExpect(jsonPath("$.refreshTokenExpiration").value(refreshTokenExpiration.toString()))
+                .andExpect(jsonPath("$.accessToken").value(accessToken))
+                .andExpect(jsonPath("$.accessTokenExpiration").value(accessTokenExpiration.toString()));
+
+        verify(refreshTokenService, times(1)).refreshToken(any(RefreshRequestDto.class));
     }
 }

@@ -1,14 +1,17 @@
 IMAGE_NAME = ghostshadow2/api-gateway
 
-all: clean build docker-build
+all: clean build docker-build docker-push
 
 clean:
-		mvn clean
+	mvn clean
 
 build:
-		mvn package
+	mvn package
 
 docker-build:
-		docker build -t $(IMAGE_NAME) .
+	docker build -t $(IMAGE_NAME) .
 
-.PHONY: all clean build docker-build
+docker-push:
+	docker push $(IMAGE_NAME)
+
+.PHONY: all clean build docker-build docker-push

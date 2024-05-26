@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 5s
+
+  external_labels:
+    monitor: 'codelab-monitor'
+
+scrape_configs:
+  - job_name: 'Services'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['192.168.0.170:8081']
+      - targets: ['192.168.0.170:8082']
+      - targets: ['192.168.0.170:8083']
+      - targets: ['192.168.0.170:8084']
+      - targets: ['192.168.0.170:8888']
+      - targets: ['192.168.0.170:8086']
+# TODO: delete health endpoints from metrics, separate to different jobs?

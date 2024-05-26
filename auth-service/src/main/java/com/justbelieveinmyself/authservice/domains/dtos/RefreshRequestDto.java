@@ -1,15 +1,13 @@
 package com.justbelieveinmyself.authservice.domains.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class RefreshRequestDto {
     @NotBlank(message = "Please, enter your refreshToken!")
     private String refreshToken;

@@ -16,8 +16,8 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found with UserID: " + userId));
     }
 
-    public void saveUser(UserDto userDto) {
-        User user = User.builder().id(userDto.getId()).build();
+    public void saveUser(Long userId) {
+        User user = User.builder().id(userId).build();
         userRepository.save(user);
     }
 

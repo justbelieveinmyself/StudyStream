@@ -81,4 +81,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+        userService.createNewUser(userDto);
+        return ResponseEntity.ok("Successfully created user");
+    }
+
 }

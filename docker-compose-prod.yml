@@ -85,6 +85,14 @@ services:
       - ./config/properties:/app/config
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   auth-service:
     image: ghostshadow2/auth-service:latest
@@ -94,7 +102,13 @@ services:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
       - spring.config.import=http://config-service:8888
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   api-gateway:
     image: ghostshadow2/api-gateway:latest
@@ -104,12 +118,16 @@ services:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
       - spring.config.import=http://config-service:8888
     depends_on:
-      - config-server
-      - eureka-server
-      - mail-service
-      - auth-service
-      - course-service
-      - user-service
+      config-server:
+        condition: service_healthy
+      mail-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      course-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
 
   mail-service:
     image: ghostshadow2/mail-service:latest
@@ -121,8 +139,13 @@ services:
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
-      - eureka-server
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   course-service:
     image: ghostshadow2/course-service:latest
@@ -132,17 +155,23 @@ services:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
       - spring.config.import=http://config-service:8888
     depends_on:
-      - eureka-server
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   eureka-server:
     image: ghostshadow2/eureka-server:latest
     ports:
       - "8081:8080"
-    environment:
-      - spring.config.import=http://config-service:8888
-    depends_on:
-      - config-server
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   user-service:
     image: ghostshadow2/user-service:latest
@@ -152,8 +181,13 @@ services:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
       - spring.config.import=http://config-service:8888
     depends_on:
-      - eureka-server
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_auth_data:

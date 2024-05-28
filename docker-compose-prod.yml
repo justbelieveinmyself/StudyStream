@@ -77,12 +77,23 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
+  eureka-server:
+    image: ghostshadow2/eureka-server:latest
+    ports:
+      - "8081:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
   config-server:
     image: ghostshadow2/config-server:latest
     ports:
       - "8888:8080"
     volumes:
       - ./config/properties:/app/config
+#    TODO: fix config and docker file generate config there
     environment:
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
     depends_on:
@@ -159,16 +170,6 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-
-  eureka-server:
-    image: ghostshadow2/eureka-server:latest
-    ports:
-      - "8081:8080"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 10s
       timeout: 10s
       retries: 3

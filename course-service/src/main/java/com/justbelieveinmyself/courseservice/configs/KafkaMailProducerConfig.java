@@ -20,7 +20,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class KafkaMailProducerConfig {
-    @Value("${spring.kafka.producer.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private final List<String> bootstrapServers;
 
     @Bean

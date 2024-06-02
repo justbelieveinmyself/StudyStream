@@ -5,6 +5,7 @@ import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.enums.Role;
 import com.justbelieveinmyself.userservice.domains.entities.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class UserDto implements Dto<User> {
     private Long id;
     private String username;

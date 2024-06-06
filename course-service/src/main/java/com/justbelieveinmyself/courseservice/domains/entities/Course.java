@@ -39,6 +39,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
     @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Module> modules = new ArrayList<>();
     @OneToOne(mappedBy = "course")
     private Enrollment enrollment;

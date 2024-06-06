@@ -8,8 +8,7 @@ import com.justbelieveinmyself.library.dto.Dto;
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ModuleDto implements Dto<Module> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
@@ -64,10 +66,12 @@ public class ModuleDto implements Dto<Module> {
 
         List<Lesson> lessons = new ArrayList<>();
 
-        for (LessonDto lessonDto : this.getLessons()) {
-            Lesson lesson = lessonDto.toEntity();
-            lesson.setModule(entity);
-            lessons.add(lesson);
+        if (this.getLessons() != null) {
+            for (LessonDto lessonDto : this.getLessons()) {
+                Lesson lesson = lessonDto.toEntity();
+                lesson.setModule(entity);
+                lessons.add(lesson);
+            }
         }
 
         entity.setLessons(lessons);

@@ -1,9 +1,10 @@
 package com.justbelieveinmyself.authservice.services;
 
+import com.justbelieveinmyself.authservice.apiclients.UserServiceClient;
 import com.justbelieveinmyself.authservice.domains.dtos.EmailDto;
-import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.authservice.repository.UserRepository;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import com.justbelieveinmyself.library.exception.ConflictException;
 import com.justbelieveinmyself.library.exception.NotFoundException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailService {
     private final UserRepository userRepository;
+    private final UserServiceClient userServiceClient;
     private final KafkaTemplate<String, EmailVerificationDto> emailVerificationKafkaTemplate;
     private final KafkaTemplate<String, EmailUpdateDto> emailUpdateKafkaTemplate;
 
@@ -41,6 +43,8 @@ public class EmailService {
         sendActivationCode(user.getUsername(), user.getEmail(), activationCode);
 
         EmailUpdateDto emailUpdateDto = new EmailUpdateDto(userId, requestDto.getEmail());
+
+        userServiceClient.updateEmail(emailUpdateDto);
         emailUpdateKafkaTemplate.send("user-email-update-topic", emailUpdateDto);
     }
 

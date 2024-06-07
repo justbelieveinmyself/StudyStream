@@ -1,7 +1,5 @@
 package com.justbelieveinmyself.authservice.configs;
 
-import com.justbelieveinmyself.authservice.kafka.EmailUpdateDtoSerializer;
-import com.justbelieveinmyself.authservice.kafka.EmailVerificationDtoSerializer;
 import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,7 @@ public class KafkaProducerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EmailVerificationDtoSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
 
@@ -41,9 +40,9 @@ public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, EmailUpdateDto> emailUpdateProducerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);//TODO: FIX ALL AND DELETE CUSTOM DESERIALIZER AND SERIALIZER
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EmailUpdateDtoSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
 
@@ -51,4 +50,5 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, EmailUpdateDto> emailUpdateKafkaTemplate() {
         return new KafkaTemplate<>(emailUpdateProducerFactory());
     }
+
 }

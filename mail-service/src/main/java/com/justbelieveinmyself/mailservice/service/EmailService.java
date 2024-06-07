@@ -1,7 +1,7 @@
 package com.justbelieveinmyself.mailservice.service;
 
 import com.justbelieveinmyself.library.dto.EmailUpdateDto;
-import com.justbelieveinmyself.mailservice.domains.dto.EmailVerificationDto;
+import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import com.justbelieveinmyself.mailservice.domains.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.justbelieveinmyself.courseservice.controllers;
 
-import com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModule;
+import com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModuleAndCourse;
 import com.justbelieveinmyself.courseservice.domains.annotations.CheckModuleExistsInCourse;
 import com.justbelieveinmyself.courseservice.domains.dtos.LessonDto;
 import com.justbelieveinmyself.courseservice.services.LessonService;
@@ -29,7 +29,7 @@ public class LessonController { //TODO: controllers to interfaces?
 
     @Operation(summary = "Get Lesson by ID", description = "Get Lesson by ID")
     @GetMapping("/{lessonId}")
-    @CheckLessonExistsInModule
+    @CheckLessonExistsInModuleAndCourse
     public ResponseEntity<LessonDto> getLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -56,7 +56,7 @@ public class LessonController { //TODO: controllers to interfaces?
 
     @Operation(summary = "Delete Lesson by ID", description = "Delete Lesson by ID")
     @DeleteMapping("{lessonId}")
-    @CheckLessonExistsInModule
+    @CheckLessonExistsInModuleAndCourse
     public ResponseEntity<ResponseMessage> deleteLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -70,7 +70,7 @@ public class LessonController { //TODO: controllers to interfaces?
     @Operation(summary = "Update Lesson by ID", description = "Update Lesson by ID")
     @PutMapping("/{lessonId}")
     @ValidateErrors
-    @CheckLessonExistsInModule
+    @CheckLessonExistsInModuleAndCourse
     public ResponseEntity<LessonDto> updateLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -85,7 +85,7 @@ public class LessonController { //TODO: controllers to interfaces?
 
     @Operation(summary = "Partial Update Lesson by ID", description = "Partial Update Lesson by ID")
     @PatchMapping("/{lessonId}")
-    @CheckLessonExistsInModule
+    @CheckLessonExistsInModuleAndCourse
     public ResponseEntity<LessonDto> patchLessonById(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,
@@ -100,7 +100,7 @@ public class LessonController { //TODO: controllers to interfaces?
 
     @Operation(summary = "Add resources to lesson.")
     @PostMapping(value = "{lessonId}/resources", consumes = "application/octet-stream")
-    @CheckLessonExistsInModule
+    @CheckLessonExistsInModuleAndCourse
     public ResponseEntity<ResponseMessage> addResources(
             @PathVariable Long courseId,
             @PathVariable Long moduleId,

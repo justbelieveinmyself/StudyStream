@@ -1,10 +1,12 @@
 package com.justbelieveinmyself.userservice.controllers;
 
 import com.justbelieveinmyself.library.aspects.ValidateErrors;
+import com.justbelieveinmyself.library.dto.EmailUpdateDto;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import com.justbelieveinmyself.userservice.domains.dtos.UpdateUserDto;
 import com.justbelieveinmyself.userservice.domains.dtos.UserDto;
 import com.justbelieveinmyself.userservice.services.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,6 +70,12 @@ public class AuthorizedUserController {
     ) {
         userService.deleteUserById(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Hidden
+    @PutMapping("/email")
+    void updateEmail(EmailUpdateDto emailUpdateDto) {
+        userService.updateEmail(emailUpdateDto);
     }
 
 }

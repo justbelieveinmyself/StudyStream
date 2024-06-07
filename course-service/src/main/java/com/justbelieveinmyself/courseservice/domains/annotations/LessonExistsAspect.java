@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LessonExistsAspect {
     private final CourseRepository courseRepository;
 
-    @Before("@annotation(com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModule)")
+    @Before("@annotation(com.justbelieveinmyself.courseservice.domains.annotations.CheckLessonExistsInModuleAndCourse)")
     public void checkLessonExistsInModule(JoinPoint joinPoint) {
         Long courseId = Long.parseLong(joinPoint.getArgs()[0].toString());
         Long moduleId = Long.parseLong(joinPoint.getArgs()[1].toString());

@@ -15,12 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "Course API", description = "Create, get, update and delete courses")
 @SecurityRequirement(name = "Bearer Authentication")
 public interface CourseController {
-
+//TODO: create course may only teacher
     @Operation(summary = "Get Courses", description = "Get Courses")
     @GetMapping
     ResponseEntity<Page<CourseDto>> getCourses(

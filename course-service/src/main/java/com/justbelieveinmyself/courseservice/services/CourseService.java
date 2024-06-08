@@ -13,8 +13,10 @@ import com.justbelieveinmyself.courseservice.repositories.specifications.CourseS
 import com.justbelieveinmyself.library.dto.ModelUtils;
 import com.justbelieveinmyself.library.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final UserService userService;
-    private AccessHelper accessHelper;
+    private final AccessHelper accessHelper;
 
     public Course findById(Long courseId) {
         return courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Course not found with CourseID: " + courseId));
@@ -86,7 +88,7 @@ public class CourseService {
 
         accessHelper.checkUserHasAccessToCourse(courseId, authorUserId);
 
-        BeanUtils.copyProperties(updateCourseDto, course);
+        ModelUtils.copyProperties(updateCourseDto, course);
         setModulesInCourseFromUpdateCourseDto(updateCourseDto, course);
 
         Course savedCourse = courseRepository.save(course);

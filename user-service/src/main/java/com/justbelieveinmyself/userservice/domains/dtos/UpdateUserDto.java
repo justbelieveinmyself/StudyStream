@@ -3,12 +3,14 @@ package com.justbelieveinmyself.userservice.domains.dtos;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class UpdateUserDto {
     @NotBlank(message = "Please, enter your firstName!")
     private String firstName;

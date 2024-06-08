@@ -3,10 +3,7 @@ package com.justbelieveinmyself.courseservice.domains.entities;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.domains.enums.CourseStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -20,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_id_seq")
@@ -41,6 +39,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
     @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Module> modules = new ArrayList<>();
     @OneToOne(mappedBy = "course")
     private Enrollment enrollment;

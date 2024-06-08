@@ -9,8 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
@@ -21,6 +20,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourseDto implements Dto<Course> {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
@@ -70,10 +72,12 @@ public class CourseDto implements Dto<Course> {
 
         List<Module> modules = new ArrayList<>();
 
-        for (ModuleDto moduleDto : this.getModules()) {
-            Module module = moduleDto.toEntity();
-            module.setCourse(course);
-            modules.add(module);
+        if (this.getModules() != null) {
+            for (ModuleDto moduleDto : this.getModules()) {
+                Module module = moduleDto.toEntity();
+                module.setCourse(course);
+                modules.add(module);
+            }
         }
 
         course.setModules(modules);

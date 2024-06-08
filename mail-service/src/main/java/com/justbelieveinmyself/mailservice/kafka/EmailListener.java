@@ -1,7 +1,7 @@
 package com.justbelieveinmyself.mailservice.kafka;
 
 import com.justbelieveinmyself.library.dto.EmailUpdateDto;
-import com.justbelieveinmyself.mailservice.domains.dto.EmailVerificationDto;
+import com.justbelieveinmyself.library.dto.EmailVerificationDto;
 import com.justbelieveinmyself.mailservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

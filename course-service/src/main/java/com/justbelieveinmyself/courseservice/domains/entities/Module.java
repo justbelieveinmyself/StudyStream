@@ -1,10 +1,7 @@
 package com.justbelieveinmyself.courseservice.domains.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Module {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "module_id_seq")
@@ -30,6 +28,7 @@ public class Module {
     @JoinColumn(nullable = false, name = "course_id")
     private Course course;
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Lesson> lessons = new ArrayList<>();
 
     public void addLesson(Lesson lesson) {

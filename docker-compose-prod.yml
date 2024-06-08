@@ -11,7 +11,7 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
@@ -77,83 +77,118 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
+  eureka-server:
+    image: ghostshadow2/eureka-server:latest
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
   config-server:
     image: ghostshadow2/config-server:latest
     ports:
-      - "8888:8080"
+      - "8888:8888"
     volumes:
       - ./config/properties:/app/config
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:/app/config
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
 
   auth-service:
     image: ghostshadow2/auth-service:latest
     ports:
-      - "8083:8080"
+      - "8081:8080"
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - spring.config.import=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - confighost=http://config-server:8888/
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   api-gateway:
     image: ghostshadow2/api-gateway:latest
     ports:
       - "8082:8080"
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - spring.config.import=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - confighost=http://config-server:8888/
     depends_on:
-      - config-server
-      - eureka-server
-      - mail-service
-      - auth-service
-      - course-service
-      - user-service
+      config-server:
+        condition: service_healthy
+      mail-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      course-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
 
   mail-service:
     image: ghostshadow2/mail-service:latest
     ports:
-      - "8086:8080"
+      - "8083:8080"
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - spring.config.import=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - confighost=http://config-server:8888/
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
-      - eureka-server
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   course-service:
     image: ghostshadow2/course-service:latest
     ports:
-      - "8085:8080"
+      - "8084:8080"
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - spring.config.import=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - confighost=http://config-server:8888/
     depends_on:
-      - eureka-server
-      - config-server
-
-  eureka-server:
-    image: ghostshadow2/eureka-server:latest
-    ports:
-      - "8081:8080"
-    environment:
-      - spring.config.import=http://config-service:8888
-    depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
   user-service:
     image: ghostshadow2/user-service:latest
     ports:
-      - "8084:8080"
+      - "8085:8080"
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8081/eureka
-      - spring.config.import=http://config-service:8888
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8080/eureka
+      - confighost=http://config-server:8888/
     depends_on:
-      - eureka-server
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_auth_data:

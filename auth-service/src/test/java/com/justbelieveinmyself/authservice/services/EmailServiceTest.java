@@ -15,6 +15,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,10 +72,24 @@ class EmailServiceTest {
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).save(any(User.class));
         verify(userServiceClient, times(1)).updateEmail(any(EmailUpdateDto.class));
-        verify(emailUpdateKafkaTemplate, times(1)).send(topic, any(EmailUpdateDto.class));
+        verify(emailUpdateKafkaTemplate, times(1)).send(eq(topic), any(EmailUpdateDto.class));
     }
 
     @Test
     void verifyEmail() {
+        final String activationCode = "activationCode";
+        User user = User.builder()
+                .id(1L)
+                .username("user")
+                .activationCode(activationCode)
+                .email("user@mail.com").build();
+
+        when(userRepository.findByActivationCode(activationCode)).thenReturn(Optional.of(user));
+
+        emailService.verifyEmail(activationCode);
+
+        verify(userRepository, times(1)).findByActivationCode(activationCode);
+        verify(userRepository, times(1)).save(user);
+        assertNull(user.getActivationCode());
     }
 }

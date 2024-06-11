@@ -10,15 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@EmbeddedKafka(ports = 9092)
+@ExtendWith(SpringExtension.class)
+
 class EmailServiceTest {
     @InjectMocks
     private EmailService emailService;
@@ -46,7 +51,13 @@ class EmailServiceTest {
 
         emailService.sendActivationCode(username, email, activationCode);
 
-        verify(emailVerificationKafkaTemplate, times(1)).send(eq(topicName), any());
+        try {
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        verify(emailVerificationKafkaTemplate, times(1)).send(eq(topicName), any(EmailVerificationDto.class));
     }
 
     @Test
@@ -66,7 +77,11 @@ class EmailServiceTest {
         when(userRepository.existsByEmail(newEmail)).thenReturn(false);
 
         emailService.updateEmail(userId, emailDto);
-
+        try {
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         verify(userRepository, times(1)).existsByEmail(newEmail);
         verify(userRepository, times(1)).findById(userId);
@@ -87,7 +102,11 @@ class EmailServiceTest {
         when(userRepository.findByActivationCode(activationCode)).thenReturn(Optional.of(user));
 
         emailService.verifyEmail(activationCode);
-
+        try {
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         verify(userRepository, times(1)).findByActivationCode(activationCode);
         verify(userRepository, times(1)).save(user);
         assertNull(user.getActivationCode());

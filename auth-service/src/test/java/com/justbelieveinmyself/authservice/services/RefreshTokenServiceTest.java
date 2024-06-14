@@ -7,17 +7,21 @@ import com.justbelieveinmyself.authservice.domains.entities.RefreshToken;
 import com.justbelieveinmyself.authservice.domains.entities.User;
 import com.justbelieveinmyself.authservice.jwt.JwtUtils;
 import com.justbelieveinmyself.authservice.repository.RefreshTokenRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,16 +34,30 @@ class RefreshTokenServiceTest {
     @Mock
     private JwtUtils jwtUtils;
 
+    @BeforeEach
+    void setup() {
+        ReflectionTestUtils.setField(refreshTokenService, "refreshTokenLifeTime", Duration.ofHours(10));
+    }
+
     @Test
     void createRefreshToken() {
+        final String token = "token";
         RefreshToken refreshToken = RefreshToken.builder()
                 .id(1L)
                 .expiration(Instant.now().plus(10, ChronoUnit.HOURS))
-                .token("token").build();
+                .token(token).build();
 
         User user = User.builder()
                 .id(1L)
                 .refreshToken(refreshToken).build();
+
+        String accessTokenString = "accessToken";
+        AccessToken accessToken = AccessToken.builder()
+                .token(accessTokenString)
+                .expiration(Instant.now().plus(2, ChronoUnit.HOURS)).build();
+
+
+        when(jwtUtils.createAccessToken(user)).thenReturn(accessToken);
 
         when(refreshTokenRepository.save(any()))
                 .thenAnswer(i -> i.getArgument(0));
@@ -48,7 +66,9 @@ class RefreshTokenServiceTest {
 
         verify(jwtUtils, times(1)).createAccessToken(user);
         verify(refreshTokenRepository, times(1)).save(any());
-
+        verify(refreshTokenRepository, times(1)).delete(any());
+        assertEquals(refresh.getAccessToken(), accessTokenString);
+        assertNotEquals(refresh.getRefreshToken(), token);
     }
 
     @Test
@@ -80,7 +100,8 @@ class RefreshTokenServiceTest {
 
         assertEquals(response.getAccessToken(), accessTokenString);
         assertEquals(response.getRefreshToken(), token);
-
+        verify(refreshTokenRepository, times(1)).save(refreshToken);
+        verify(refreshTokenRepository, times(0)).delete(any());
     }
 
 }

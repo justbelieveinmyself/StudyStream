@@ -59,11 +59,13 @@ class AuthControllerTest {
         final String phone = "+79718009324";
         Set<Role> roles = Set.of(Role.STUDENT);
 
+        String password = "ABCabc123!";
         RegisterDto registerDto = RegisterDto.builder()
                 .username(username)
                 .email(email)
                 .phone(phone)
-                .password("1234").build();
+                .password(password)
+                .confirmPassword(password).build();
 
         UserDto userDto = UserDto.builder()
                 .id(id)

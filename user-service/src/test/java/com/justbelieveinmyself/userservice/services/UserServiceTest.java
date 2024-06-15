@@ -31,7 +31,8 @@ class UserServiceTest {
     private UserRepository userRepository;
     @Test
     void createNewUser() {
-        userService.createNewUser(any(UserDto.class));
+        UserDto dto = UserDto.builder().build();
+        userService.createNewUser(dto);
 
         verify(userRepository, times(1)).save(any(User.class));
     }

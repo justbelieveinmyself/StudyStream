@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CourseESRepository extends ElasticsearchRepository<CourseES, Long> {
-    List<CourseES> findByTitleOrDescriptionOrKeywordsContainingIgnoreCase(String title, String description, String keywords, Pageable page);
+    List<CourseES> findByTitleOrDescriptionOrCategoryContainingIgnoreCase(String title, String description, String category, Pageable page);
 }

@@ -38,4 +38,4 @@ build/
 .vscode/
 
 /.env
-/logstash/postgresql-42.2.23.jar
+/config/logstash/postgresql-42.2.23.jar

@@ -6,7 +6,7 @@ import com.justbelieveinmyself.courseservice.domains.enums.CourseDifficulty;
 import com.justbelieveinmyself.courseservice.services.CourseService;
 import com.justbelieveinmyself.library.dto.ResponseMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/courses")
 @CrossOrigin
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class CourseControllerImpl implements CourseController {
     private final CourseService courseService;
 
